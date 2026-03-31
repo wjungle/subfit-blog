@@ -1,0 +1,38 @@
+---
+const today = new Date();
+---
+
+<footer>
+	<div class="footer-inner">
+		<a href="https://subfit.vercel.app" target="_blank" rel="noopener noreferrer" class="app-link">
+			SubFit — 沉浸式語言訓練 App
+		</a>
+		<span class="copy">&copy; {today.getFullYear()} SubFit Blog</span>
+	</div>
+</footer>
+<style>
+	footer {
+		padding: 2em 1em 4em;
+		background: linear-gradient(var(--gray-gradient)) no-repeat;
+		border-top: 1px solid rgba(var(--gray-light), 0.5);
+	}
+	.footer-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5em;
+	}
+	.app-link {
+		color: rgb(99,102,241);
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 0.9em;
+	}
+	.app-link:hover {
+		text-decoration: underline;
+	}
+	.copy {
+		color: rgb(var(--gray));
+		font-size: 0.8em;
+	}
+</style>
