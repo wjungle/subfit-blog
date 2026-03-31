@@ -1,8 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 6);
 ---
 
 <!doctype html>
@@ -14,13 +20,17 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 		<Header />
 		<main>
 			<section class="hero">
-				<h1>用「精聽」真正聽懂英文</h1>
+				<div class="hero-badge">沉浸式英文訓練</div>
+				<h1>用「精聽」<br />真正聽懂英文</h1>
 				<p class="subtitle">
-					大量聽不等於聽懂。SubFit Blog 分享沉浸式英文訓練的核心技巧——精聽方法、工具評比、學習心法——幫助你從「聽到」進化到「聽懂」。
+					大量聽不等於聽懂。SubFit Blog 分享有效的精聽策略、工具評比與學習心法，幫你從「聽到」進化到「聽懂」。
 				</p>
-				<a href="https://subfit.vercel.app" target="_blank" rel="noopener noreferrer" class="cta-btn">
-					立即體驗 SubFit App →
-				</a>
+				<div class="hero-actions">
+					<a href="https://subfit.vercel.app" target="_blank" rel="noopener noreferrer" class="cta-btn primary">
+						立即體驗 SubFit App →
+					</a>
+					<a href="/blog" class="cta-btn secondary">瀏覽文章</a>
+				</div>
 			</section>
 
 			<section class="features">
@@ -41,10 +51,26 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 				</div>
 			</section>
 
-			<section class="latest">
-				<h2>最新文章</h2>
-				<a href="/blog" class="blog-link">前往文章列表 →</a>
-			</section>
+			{posts.length > 0 && (
+				<section class="latest">
+					<div class="latest-header">
+						<h2>最新文章</h2>
+						<a href="/blog" class="see-all">查看全部 →</a>
+					</div>
+					<div class="post-grid">
+						{posts.map((post) => (
+							<a href={`/blog/${post.id}/`} class="post-card">
+								<div class="post-card-body">
+									<p class="post-date"><FormattedDate date={post.data.pubDate} /></p>
+									<h3 class="post-title">{post.data.title}</h3>
+									<p class="post-desc">{post.data.description}</p>
+								</div>
+								<span class="post-read">閱讀全文 →</span>
+							</a>
+						))}
+					</div>
+				</section>
+			)}
 		</main>
 		<Footer />
 	</body>
@@ -52,96 +78,201 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 <style>
 	main {
-		max-width: 720px;
+		max-width: 860px;
 		margin: 0 auto;
-		padding: 2em 1em;
+		padding: 0 1.5em 4em;
 	}
 
+	/* Hero */
 	.hero {
 		text-align: center;
-		padding: 3em 1em 2em;
+		padding: 4em 1em 3em;
+	}
+
+	.hero-badge {
+		display: inline-block;
+		background: rgba(99, 102, 241, 0.12);
+		color: rgb(99, 102, 241);
+		border: 1px solid rgba(99, 102, 241, 0.3);
+		padding: 0.3em 1em;
+		border-radius: 999px;
+		font-size: 0.85em;
+		font-weight: 600;
+		margin-bottom: 1.2em;
+		letter-spacing: 0.03em;
 	}
 
 	.hero h1 {
-		font-size: 2.4em;
+		font-size: 3em;
 		margin-bottom: 0.5em;
-		line-height: 1.2;
+		line-height: 1.15;
+		background: linear-gradient(135deg, rgb(var(--black)) 40%, rgb(99, 102, 241));
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
 	}
 
 	.subtitle {
 		font-size: 1.1em;
 		color: rgb(var(--gray));
-		max-width: 520px;
+		max-width: 540px;
 		margin: 0 auto 2em;
 		line-height: 1.7;
 	}
 
+	.hero-actions {
+		display: flex;
+		gap: 1em;
+		justify-content: center;
+		flex-wrap: wrap;
+	}
+
 	.cta-btn {
 		display: inline-block;
-		background: rgb(99, 102, 241);
-		color: white;
 		padding: 0.75em 1.8em;
 		border-radius: 8px;
 		text-decoration: none;
 		font-weight: bold;
 		font-size: 1em;
-		transition: background 0.2s;
+		transition: all 0.2s;
 	}
 
-	.cta-btn:hover {
+	.cta-btn.primary {
+		background: rgb(99, 102, 241);
+		color: white;
+	}
+
+	.cta-btn.primary:hover {
 		background: rgb(79, 82, 221);
+		transform: translateY(-1px);
+		box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35);
 	}
 
+	.cta-btn.secondary {
+		background: transparent;
+		color: rgb(var(--gray-dark));
+		border: 1.5px solid rgba(var(--gray-light), 1);
+	}
+
+	.cta-btn.secondary:hover {
+		border-color: rgb(99, 102, 241);
+		color: rgb(99, 102, 241);
+	}
+
+	/* Features */
 	.features {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 		gap: 1.5em;
-		margin: 3em 0;
+		margin: 1em 0 3.5em;
 	}
 
 	.feature {
 		padding: 1.5em;
-		background: rgba(var(--gray-light), 0.3);
-		border-radius: 10px;
+		background: rgba(var(--gray-light), 0.35);
+		border-radius: 12px;
+		border: 1px solid rgba(var(--gray-light), 1);
+		transition: border-color 0.2s;
+	}
+
+	.feature:hover {
+		border-color: rgba(99, 102, 241, 0.4);
 	}
 
 	.feature-icon {
 		font-size: 1.8em;
-		margin-bottom: 0.4em;
+		margin-bottom: 0.5em;
 	}
 
 	.feature h2 {
-		font-size: 1.1em;
+		font-size: 1.05em;
 		margin: 0 0 0.5em;
 	}
 
 	.feature p {
-		font-size: 0.9em;
+		font-size: 0.88em;
 		color: rgb(var(--gray));
-		line-height: 1.6;
+		line-height: 1.65;
 		margin: 0;
 	}
 
-	.latest {
+	/* Latest posts */
+	.latest-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		border-top: 1px solid rgba(var(--gray-light), 0.5);
-		padding-top: 2em;
-		margin-top: 1em;
+		margin-bottom: 1.5em;
 	}
 
-	.latest h2 {
+	.latest-header h2 {
 		margin: 0;
+		font-size: 1.5em;
 	}
 
-	.blog-link {
+	.see-all {
 		color: rgb(99, 102, 241);
 		text-decoration: none;
-		font-weight: bold;
+		font-size: 0.9em;
+		font-weight: 600;
 	}
 
-	.blog-link:hover {
+	.see-all:hover {
 		text-decoration: underline;
+	}
+
+	.post-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+		gap: 1.25em;
+	}
+
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 1.5em;
+		border: 1.5px solid rgba(var(--gray-light), 1);
+		border-radius: 12px;
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.2s;
+		background: white;
+	}
+
+	.post-card:hover {
+		border-color: rgba(99, 102, 241, 0.5);
+		box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+		transform: translateY(-2px);
+	}
+
+	.post-date {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+		margin: 0 0 0.5em;
+	}
+
+	.post-title {
+		font-size: 1em;
+		font-weight: 700;
+		margin: 0 0 0.6em;
+		line-height: 1.4;
+		color: rgb(var(--black));
+	}
+
+	.post-desc {
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+		line-height: 1.6;
+		margin: 0 0 1.2em;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.post-read {
+		font-size: 0.85em;
+		color: rgb(99, 102, 241);
+		font-weight: 600;
 	}
 </style>

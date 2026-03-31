@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
@@ -13,75 +12,77 @@ const posts = (await getCollection('blog')).sort(
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-TW">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<BaseHead title={`文章列表 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
 			main {
-				width: 960px;
+				max-width: 860px;
+				padding: 3em 1.5em;
 			}
-			ul {
+
+			.page-title {
+				font-size: 2em;
+				margin-bottom: 0.25em;
+			}
+
+			.page-subtitle {
+				color: rgb(var(--gray));
+				font-size: 0.95em;
+				margin-bottom: 2.5em;
+			}
+
+			.post-list {
 				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
+				flex-direction: column;
+				gap: 1.25em;
+				list-style: none;
 				margin: 0;
 				padding: 0;
 			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
+
+			.post-list li a {
+				display: flex;
+				flex-direction: column;
+				padding: 1.5em;
+				border: 1.5px solid rgba(var(--gray-light), 1);
 				border-radius: 12px;
+				text-decoration: none;
+				color: inherit;
+				background: white;
+				transition: all 0.2s;
 			}
-			ul li a {
-				display: block;
+
+			.post-list li a:hover {
+				border-color: rgba(99, 102, 241, 0.5);
+				box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+				transform: translateY(-2px);
 			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
+
+			.post-date {
+				font-size: 0.8em;
 				color: rgb(var(--gray));
+				margin: 0 0 0.4em;
 			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
+
+			.post-title {
+				font-size: 1.15em;
+				font-weight: 700;
+				margin: 0 0 0.5em;
+				color: rgb(var(--black));
+				line-height: 1.35;
 			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
+
+			.post-desc {
+				font-size: 0.9em;
+				color: rgb(var(--gray));
+				line-height: 1.6;
+				margin: 0;
 			}
+
 			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
+				main {
+					padding: 2em 1em;
 				}
 			}
 		</style>
@@ -89,25 +90,23 @@ const posts = (await getCollection('blog')).sort(
 	<body>
 		<Header />
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+			<h1 class="page-title">所有文章</h1>
+			<p class="page-subtitle">共 {posts.length} 篇 · 關於沉浸式英文訓練的技巧與心法</p>
+			<ul class="post-list">
+				{
+					posts.map((post) => (
+						<li>
+							<a href={`/blog/${post.id}/`}>
+								<p class="post-date"><FormattedDate date={post.data.pubDate} /></p>
+								<h2 class="post-title">{post.data.title}</h2>
+								{post.data.description && (
+									<p class="post-desc">{post.data.description}</p>
+								)}
+							</a>
+						</li>
+					))
+				}
+			</ul>
 		</main>
 		<Footer />
 	</body>
