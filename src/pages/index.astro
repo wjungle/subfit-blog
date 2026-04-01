@@ -78,6 +78,7 @@ const posts = (await getCollection('blog'))
 
 <style>
 	main {
+		width: 100%;
 		max-width: 860px;
 		margin: 0 auto;
 		padding: 0 1.5em 4em;
@@ -274,5 +275,27 @@ const posts = (await getCollection('blog'))
 		font-size: 0.85em;
 		color: rgb(99, 102, 241);
 		font-weight: 600;
+	}
+
+	@media (max-width: 720px) {
+		main {
+			padding: 0 1em 3em;
+		}
+
+		.hero {
+			padding: 2.5em 0 2em;
+		}
+
+		.hero h1 {
+			font-size: 1.9em;
+		}
+
+		.features {
+			grid-template-columns: 1fr;
+		}
+
+		.post-grid {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

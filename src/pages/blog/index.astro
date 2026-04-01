@@ -17,6 +17,7 @@ const posts = (await getCollection('blog')).sort(
 		<BaseHead title={`文章列表 | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
 			main {
+				width: 100%;
 				max-width: 860px;
 				padding: 3em 1.5em;
 			}
