@@ -18,7 +18,5 @@
     "astro": "^6.1.2",
     "sharp": "^0.34.3"
   },
-  "devDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "^4.60.3"
-  }
+  "devDependencies": {}
 }
