@@ -1,0 +1,115 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="價格方案與銷售內容 — SubFit"
+	description="SubFit 訂閱方案說明：免費方案與 Pro 方案（NT$49/月）的功能、計費方式、自動續訂與取消方式。"
+	pubDate={new Date('2026-06-28')}
+>
+	<p><strong>最後更新：2026 年 6 月 28 日</strong></p>
+	<p>
+		本頁說明 SubFit（以下簡稱「本服務」，網址
+		<a href="https://subfit.app" target="_blank" rel="noopener noreferrer">https://subfit.app</a>）
+		所提供之付費訂閱方案、計費方式與相關交易條款。本服務由個人開發者營運。
+	</p>
+
+	<hr />
+
+	<h2>一、商品性質</h2>
+	<p>
+		SubFit Pro 為<strong>線上數位服務（訂閱制）</strong>，付款成功後即時開通，透過網路提供，無實體商品寄送。
+	</p>
+
+	<hr />
+
+	<h2>二、訂閱方案</h2>
+
+	<div class="pricing-table-wrapper">
+		<table>
+			<thead>
+				<tr>
+					<th>功能</th>
+					<th>免費（Free）</th>
+					<th>Pro</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><td>訓練現有課程</td><td>每月有額度上限</td><td>無限</td></tr>
+				<tr><td>TTS 語音</td><td>1 種預設語音</td><td>全部語音</td></tr>
+				<tr><td>拍書頁辨識 / 影音匯入</td><td>登入後可用</td><td>可用</td></tr>
+				<tr><td>AI 句子講解</td><td>每日有次數上限</td><td>無限</td></tr>
+				<tr><td>AI 講解文字複製</td><td>—</td><td>✓</td></tr>
+				<tr><td>匯出 SRT 字幕</td><td>—</td><td>✓</td></tr>
+				<tr><td>Anki 匯出含 AI 分析</td><td>—</td><td>✓</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<hr />
+
+	<h2>三、價格與計費</h2>
+	<ul>
+		<li><strong>Pro 方案：每月新台幣 NT$49 元</strong>（創始會員價，於訂閱期間維持不變）。</li>
+		<li>幣別：新台幣（TWD）。</li>
+		<li>計費週期：<strong>每月自動續訂</strong>，於每個計費週期屆滿時自動扣款，直到您取消為止。</li>
+		<li>付款方式：信用卡，透過第三方金流服務商
+			<a href="https://recur.tw" target="_blank" rel="noopener noreferrer">Recur</a>（底層為 PAYUNi 統一金流）處理。本服務不會儲存您完整的信用卡卡號。</li>
+		<li>開通時間：付款成功後即時開通 Pro 權限。</li>
+	</ul>
+
+	<hr />
+
+	<h2>四、自動續訂與取消</h2>
+	<ul>
+		<li>訂閱為自動續訂制，若未於下一個計費日前取消，系統將自動扣取下一期費用。</li>
+		<li>您可<strong>隨時取消</strong>訂閱。取消後，您仍可使用 Pro 功能至<strong>當期已付費期間屆滿為止</strong>，到期後不再自動扣款，並回復為免費方案。</li>
+		<li>取消方式：請來信
+			<a href="mailto:support@subfit.app">support@subfit.app</a> 提出，我們將協助處理（未來將於 App 內提供自助取消入口）。</li>
+	</ul>
+
+	<hr />
+
+	<h2>五、退款</h2>
+	<p>
+		本服務之退款相關規定請見
+		<a href="https://blog.subfit.app/refund">退款政策</a>。
+	</p>
+
+	<hr />
+
+	<h2>六、聯絡我們</h2>
+	<p>
+		如對方案、計費或交易有任何疑問，請寄信至：
+		<a href="mailto:support@subfit.app">support@subfit.app</a>
+	</p>
+</Layout>
+
+<style>
+	.pricing-table-wrapper {
+		overflow-x: auto;
+		margin: 1.5rem 0;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.9rem;
+	}
+
+	th, td {
+		border: 1px solid #e2e8f0;
+		padding: 0.6rem 0.9rem;
+		text-align: left;
+		vertical-align: top;
+	}
+
+	th {
+		background-color: #f8fafc;
+		font-weight: 600;
+	}
+
+	tr:nth-child(even) td {
+		background-color: #f8fafc;
+	}
+</style>

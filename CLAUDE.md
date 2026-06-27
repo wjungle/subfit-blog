@@ -34,6 +34,8 @@ vercel           # 部署到 Vercel
 
 > Git Bash 無法直接執行 `astro` 指令，一律用 `npm run <script>`。
 
+> ⚠️ **一律在 WSL 跑，不要用 Git Bash**：`node_modules` 的 rollup 原生模組是平台相依的（Linux 與 Windows 各一份）。在 WSL 跑過 `npm install` 後，node_modules 變成 Linux 版，Git Bash 會報 `Cannot find module '@rollup/rollup-win32-x64-msvc'`（反之亦然）。兩個環境間切換會讓 npm 一直重整原生模組，故統一在 WSL：`wsl` → `cd /mnt/f/ccc/subfit-blog` → `npm run dev`。瀏覽器連不到 localhost 時用 `npm run dev -- --host`。部署不受影響（Vercel 用乾淨 Linux 環境 build）。
+
 ## 架構概覽
 
 - **內容層**：所有部落格文章放在 `src/content/blog/`，支援 `.md` / `.mdx`。Schema 定義在 `src/content.config.ts`，frontmatter 必填欄位為 `title`、`description`、`pubDate`。

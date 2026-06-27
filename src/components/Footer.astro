@@ -7,6 +7,12 @@ const today = new Date();
 		<a href="https://subfit.app" target="_blank" rel="noopener noreferrer" class="app-link">
 			SubFit — 沉浸式語言訓練 App
 		</a>
+		<nav class="legal-links">
+			<a href="/pricing">價格方案</a>
+			<a href="/refund">退款政策</a>
+			<a href="/terms">服務條款</a>
+			<a href="/privacy">隱私權政策</a>
+		</nav>
 		<span class="copy">&copy; {today.getFullYear()} SubFit Blog</span>
 	</div>
 </footer>
@@ -29,6 +35,20 @@ const today = new Date();
 		font-size: 0.9em;
 	}
 	.app-link:hover {
+		text-decoration: underline;
+	}
+	.legal-links {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.25em 1em;
+	}
+	.legal-links a {
+		color: rgb(var(--gray));
+		text-decoration: none;
+		font-size: 0.8em;
+	}
+	.legal-links a:hover {
 		text-decoration: underline;
 	}
 	.copy {
