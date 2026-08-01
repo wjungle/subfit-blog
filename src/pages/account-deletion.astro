@@ -1,0 +1,94 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="刪除帳號 — SubFit"
+	description="如何刪除 SubFit 帳號與相關資料：App 內刪除步驟、來信申請方式，以及各項資料的刪除與保留說明。"
+	pubDate={new Date('2026-08-01')}
+>
+	<p><strong>最後更新：2026 年 8 月 1 日</strong></p>
+	<p>
+		本頁說明如何刪除您的 SubFit 帳號及相關資料。SubFit（應用程式 ID：<code>app.subfit.app</code>）
+		由個人開發者營運，網址為
+		<a href="https://subfit.app" target="_blank" rel="noopener noreferrer">https://subfit.app</a>。
+	</p>
+
+	<hr />
+
+	<h2>方式一：在 App 內刪除（建議）</h2>
+	<ol>
+		<li>開啟 SubFit，前往<strong>設定</strong></li>
+		<li>點選<strong>帳號管理</strong></li>
+		<li>捲動到最下方的<strong>危險操作</strong>區塊</li>
+		<li>點選<strong>刪除帳號</strong>，並在確認視窗再次確認</li>
+	</ol>
+	<p>
+		確認後帳號與伺服器上的個人資料會<strong>立即永久刪除</strong>，並自動登出。此操作無法復原。
+	</p>
+
+	<h2>方式二：來信申請（不需安裝 App）</h2>
+	<p>
+		若您已解除安裝 App 或無法登入，請從<strong>註冊時使用的 Email</strong> 寄信至
+		<a href="mailto:support@subfit.app">support@subfit.app</a>，主旨註明「刪除帳號」。
+	</p>
+	<p>
+		為確認身分，請務必使用註冊時的同一個 Email 寄件。我們會在收到後
+		<strong>7 個工作天內</strong>完成刪除並回信確認。
+	</p>
+
+	<hr />
+
+	<h2>會刪除哪些資料</h2>
+	<ul>
+		<li>帳號識別資料：Email、頭像網址、Google／Apple 使用者 ID</li>
+		<li>學習資料：課程進度、播放次數、書籤、SM-2 複習排程、句子筆記</li>
+		<li>經驗值、等級、連續天數與排行榜記錄</li>
+		<li>課程雲端備份（自訂課程的字幕與設定），含每日備份快照</li>
+		<li>每日功能用量記錄</li>
+		<li>與您裝置關聯的使用行為事件記錄</li>
+	</ul>
+
+	<h2>會保留哪些資料</h2>
+	<ul>
+		<li>
+			<strong>月度冠軍榜</strong>：若您曾登上排行榜月冠軍，該筆歷史記錄會保留，但暱稱與所有可識別欄位會被抹除
+			（顯示為「已刪除的使用者」），刪除後即無法對應到您。
+		</li>
+		<li>
+			<strong>訂閱與交易記錄</strong>：由金流服務商（Apple、Google、Recur）依法保存，不在本服務可刪除的範圍內。
+		</li>
+		<li>
+			<strong>語音與翻譯快取</strong>：以句子內容產生的共用快取，不含任何個人識別資訊，不因帳號刪除而移除。
+		</li>
+	</ul>
+
+	<h2>裝置本機資料</h2>
+	<p>
+		儲存在您手機或瀏覽器上的資料（學習進度、匯入的課程與音檔）不會隨帳號刪除自動清除。
+		如需一併移除，請解除安裝 App，或在<strong>設定 → 儲存空間</strong>清除音檔快取。
+	</p>
+
+	<hr />
+
+	<h2>⚠️ 訂閱請先取消</h2>
+	<p>
+		<strong>刪除帳號不會自動取消您的付費訂閱。</strong>請先依購買來源取消，否則仍會持續扣款：
+	</p>
+	<ul>
+		<li><strong>iOS</strong>：設定 → Apple ID → 訂閱 → SubFit → 取消訂閱</li>
+		<li><strong>Android</strong>：Google Play → 個人資料 → 付款與訂閱 → 訂閱 → SubFit → 取消訂閱</li>
+		<li>
+			<strong>網頁版</strong>：請透過
+			<a href="mailto:support@subfit.app">support@subfit.app</a> 聯繫我們協助取消
+		</li>
+	</ul>
+
+	<hr />
+
+	<p>
+		有任何疑問請來信 <a href="mailto:support@subfit.app">support@subfit.app</a>。
+		關於資料蒐集與使用的完整說明，請參閱
+		<a href="/privacy">隱私權政策</a>。
+	</p>
+</Layout>
