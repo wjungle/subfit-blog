@@ -1,58 +1,145 @@
 ---
 const today = new Date();
+
+const columns = [
+	{
+		title: '產品',
+		links: [
+			{ href: '/#features', label: '功能介紹' },
+			{ href: '/pricing', label: '價格方案' },
+			{ href: '/faq', label: '常見問題' },
+			{ href: 'https://subfit.app', label: '網頁版', external: true },
+		],
+	},
+	{
+		title: '下載',
+		links: [
+			{ href: 'https://apps.apple.com/tw/app/subfit/id6790284001', label: 'App Store', external: true },
+			{ href: 'https://play.google.com/store/apps/details?id=app.subfit.app', label: 'Google Play', external: true },
+		],
+	},
+	{
+		title: '資源',
+		links: [
+			{ href: '/blog', label: '學習文章' },
+			{ href: '/about', label: '關於 SubFit' },
+			{ href: '/rss.xml', label: 'RSS 訂閱' },
+		],
+	},
+	{
+		title: '條款',
+		links: [
+			{ href: '/terms', label: '服務條款' },
+			{ href: '/privacy', label: '隱私權政策' },
+			{ href: '/refund', label: '退款政策' },
+			{ href: '/account-deletion', label: '刪除帳號' },
+		],
+	},
+];
 ---
 
-<footer>
+<footer class="site-footer">
 	<div class="footer-inner">
-		<a href="https://subfit.app" target="_blank" rel="noopener noreferrer" class="app-link">
-			SubFit — 沉浸式語言訓練 App
-		</a>
-		<nav class="legal-links">
-			<a href="/pricing">價格方案</a>
-			<a href="/refund">退款政策</a>
-			<a href="/terms">服務條款</a>
-			<a href="/privacy">隱私權政策</a>
-		</nav>
-		<span class="copy">&copy; {today.getFullYear()} SubFit Blog</span>
+		<div class="brand-col">
+			<img src="/logo-wordmark-dark.svg" alt="SubFit" width="124" height="30" />
+			<p class="tagline">讓你遇到的每一句，<br />都能變成你的練習。</p>
+			<a href="mailto:support@subfit.app" class="mail">support@subfit.app</a>
+		</div>
+
+		{
+			columns.map((col) => (
+				<nav class="col" aria-label={col.title}>
+					<h3>{col.title}</h3>
+					<ul>
+						{col.links.map((l) => (
+							<li>
+								<a
+									href={l.href}
+									{...(l.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+								>
+									{l.label}
+								</a>
+							</li>
+						))}
+					</ul>
+				</nav>
+			))
+		}
 	</div>
+	<div class="copy">&copy; {today.getFullYear()} SubFit · 一句一句，從聽懂到開口</div>
 </footer>
+
 <style>
-	footer {
-		padding: 2em 1em 4em;
-		background: linear-gradient(var(--gray-gradient)) no-repeat;
-		border-top: 1px solid rgba(var(--gray-light), 0.5);
-	}
-	.footer-inner {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 0.5em;
-	}
-	.app-link {
-		color: rgb(99,102,241);
-		text-decoration: none;
-		font-weight: bold;
+	.site-footer {
+		background: var(--ink);
+		color: rgba(254, 247, 233, 0.75);
+		padding: 3.5em 1.25em 2em;
 		font-size: 0.9em;
 	}
-	.app-link:hover {
-		text-decoration: underline;
+	.footer-inner {
+		max-width: 1120px;
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: 1.6fr repeat(4, 1fr);
+		gap: 2em;
 	}
-	.legal-links {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 0.25em 1em;
+	.brand-col img {
+		height: 30px;
+		width: auto;
+		border-radius: 0;
 	}
-	.legal-links a {
-		color: rgb(var(--gray));
+	.tagline {
+		margin: 1em 0 0.8em;
+		font-family: var(--font-serif);
+		font-weight: 700;
+		color: var(--cream);
+		line-height: 1.6;
+	}
+	.mail {
+		color: var(--accent-2);
 		text-decoration: none;
-		font-size: 0.8em;
 	}
-	.legal-links a:hover {
+	.mail:hover {
 		text-decoration: underline;
+		color: var(--accent-2);
+	}
+	.col h3 {
+		color: var(--cream);
+		font-size: 0.95em;
+		margin-bottom: 0.9em;
+		letter-spacing: 0.05em;
+	}
+	.col ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.45em;
+	}
+	.col a {
+		color: rgba(254, 247, 233, 0.7);
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+	.col a:hover {
+		color: var(--accent-2);
 	}
 	.copy {
-		color: rgb(var(--gray));
-		font-size: 0.8em;
+		max-width: 1120px;
+		margin: 2.5em auto 0;
+		padding-top: 1.5em;
+		border-top: 1px solid rgba(254, 247, 233, 0.12);
+		font-size: 0.85em;
+		color: rgba(254, 247, 233, 0.5);
+	}
+
+	@media (max-width: 820px) {
+		.footer-inner {
+			grid-template-columns: 1fr 1fr;
+		}
+		.brand-col {
+			grid-column: 1 / -1;
+		}
 	}
 </style>

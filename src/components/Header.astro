@@ -1,84 +1,180 @@
 ---
-import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+
+const links = [
+	{ href: '/', label: '首頁' },
+	{ href: '/#features', label: '功能' },
+	{ href: '/blog', label: '文章' },
+	{ href: '/pricing', label: '價格' },
+	{ href: '/faq', label: 'FAQ' },
+	{ href: '/about', label: '關於' },
+];
 ---
 
-<header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
-		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
-			<HeaderLink href="/faq">FAQ</HeaderLink>
-			<HeaderLink href="/about">About</HeaderLink>
-		</div>
-		<div class="social-links">
-			<a href="https://subfit.app" target="_blank" rel="noopener noreferrer" class="app-cta">
-				試用 App
+<header class="site-header">
+	<nav class="nav">
+		<a href="/" class="brand" aria-label="SubFit 首頁">
+			<img src="/logo-wordmark-light.svg" alt="SubFit" width="112" height="27" />
+		</a>
+
+		<!-- 手機版漢堡按鈕；桌面版隱藏 -->
+		<button class="menu-toggle" type="button" aria-label="開啟選單" aria-expanded="false" aria-controls="site-menu">
+			<span></span><span></span><span></span>
+		</button>
+
+		<div class="menu" id="site-menu">
+			<div class="links">
+				{links.map((l) => <HeaderLink href={l.href}>{l.label}</HeaderLink>)}
+			</div>
+			<a href="https://subfit.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary app-cta">
+				免費試用
 			</a>
 		</div>
 	</nav>
 </header>
-<style>
-	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
-	}
-	h2 {
-		margin: 0;
-		font-size: 1em;
-	}
 
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
+<script>
+	// 手機版選單開關：切換 header 上的 .open class
+	const header = document.querySelector('.site-header');
+	const toggle = header?.querySelector<HTMLButtonElement>('.menu-toggle');
+	toggle?.addEventListener('click', () => {
+		const open = header!.classList.toggle('open');
+		toggle.setAttribute('aria-expanded', String(open));
+		toggle.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
+	});
+	// 點選單內連結後自動收合（例如 /#features 錨點）
+	header?.querySelectorAll('.menu a').forEach((a) =>
+		a.addEventListener('click', () => {
+			header.classList.remove('open');
+			toggle?.setAttribute('aria-expanded', 'false');
+		}),
+	);
+</script>
+
+<style>
+	.site-header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: rgba(254, 247, 233, 0.85);
+		backdrop-filter: saturate(160%) blur(12px);
+		-webkit-backdrop-filter: saturate(160%) blur(12px);
+		border-bottom: 1px solid rgba(var(--black), 0.06);
 	}
-	nav {
+	.nav {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 0.7em 1.25em;
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		gap: 1em;
 	}
-	nav a {
-		padding: 1em 0.5em;
-		color: var(--black);
-		border-bottom: 4px solid transparent;
-		text-decoration: none;
-	}
-	nav a.active {
-		text-decoration: none;
-		border-bottom-color: var(--accent);
-	}
-	.social-links {
+	.brand {
 		display: flex;
+		align-items: center;
 	}
-
+	.brand img {
+		display: block;
+		height: 27px;
+		width: auto;
+		border-radius: 0;
+	}
+	.menu {
+		display: flex;
+		align-items: center;
+		gap: 1.5em;
+	}
+	.links {
+		display: flex;
+		gap: 0.25em;
+	}
+	.links :global(a) {
+		padding: 0.35em 0.8em;
+		border-radius: 999px;
+		color: rgb(var(--gray-dark));
+		font-size: 0.92em;
+		font-weight: 500;
+		text-decoration: none;
+		transition:
+			background 0.2s,
+			color 0.2s;
+	}
+	.links :global(a:hover) {
+		color: var(--accent);
+		background: var(--accent-soft);
+	}
+	.links :global(a.active) {
+		color: var(--accent-dark);
+		background: var(--accent-soft);
+		font-weight: 700;
+		text-decoration: none;
+	}
 	.app-cta {
-		background: rgb(99, 102, 241);
-		color: white !important;
-		padding: 0.4em 1em !important;
-		border-radius: 6px;
-		font-weight: bold;
+		padding: 0.55em 1.3em;
 		font-size: 0.9em;
-		border-bottom: none !important;
 	}
 
-	.app-cta:hover {
-		background: rgb(79, 82, 221);
+	.menu-toggle {
+		display: none;
+		width: 40px;
+		height: 40px;
+		padding: 0;
+		border: none;
+		background: transparent;
+		cursor: pointer;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 5px;
+	}
+	.menu-toggle span {
+		display: block;
+		width: 22px;
+		height: 2.5px;
+		border-radius: 2px;
+		background: rgb(var(--black));
+		transition:
+			transform 0.25s,
+			opacity 0.25s;
 	}
 
-	@media (max-width: 720px) {
-		.social-links {
+	@media (max-width: 820px) {
+		.menu-toggle {
+			display: flex;
+		}
+		.menu {
 			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 1em;
+			padding: 1em 1.25em 1.5em;
+			background: var(--cream);
+			border-bottom: 1px solid rgba(var(--black), 0.08);
+			box-shadow: 0 12px 24px rgba(var(--black), 0.08);
 		}
-		nav {
-			flex-wrap: wrap;
-			gap: 0;
+		.site-header.open .menu {
+			display: flex;
 		}
-		nav a {
-			padding: 0.6em 0.3em;
-			font-size: 0.9em;
+		.links {
+			flex-direction: column;
+		}
+		.links :global(a) {
+			padding: 0.7em 0.9em;
+			font-size: 1em;
+		}
+		.site-header.open .menu-toggle span:nth-child(1) {
+			transform: translateY(7.5px) rotate(45deg);
+		}
+		.site-header.open .menu-toggle span:nth-child(2) {
+			opacity: 0;
+		}
+		.site-header.open .menu-toggle span:nth-child(3) {
+			transform: translateY(-7.5px) rotate(-45deg);
 		}
 	}
 </style>
