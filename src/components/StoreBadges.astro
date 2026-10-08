@@ -1,0 +1,61 @@
+---
+// App Store / Google Play 官方下載徽章（首頁 hero 與底部 CTA 共用）
+// 官方規範：徽章不可變形、改色或加工，只能等比例縮放。
+interface Props {
+	center?: boolean;
+}
+
+const { center = false } = Astro.props;
+
+const APP_STORE_URL = 'https://apps.apple.com/tw/app/subfit/id6790284001';
+const PLAY_URL = 'https://play.google.com/store/apps/details?id=app.subfit.app';
+---
+
+<div class:list={['stores', { center }]}>
+	<a href={APP_STORE_URL} target="_blank" rel="noopener noreferrer" class="store apple" aria-label="在 App Store 下載 SubFit">
+		<img src="/badges/appstore-zh-tw.svg" alt="從 App Store 下載" width="120" height="44" />
+	</a>
+	<a href={PLAY_URL} target="_blank" rel="noopener noreferrer" class="store google" aria-label="在 Google Play 下載 SubFit">
+		<!-- 官方 PNG 四周自帶留白，用負 margin 抵銷，讓可見高度與 App Store 徽章一致 -->
+		<img src="/badges/googleplay-zh-tw.png" alt="立即下載 Google Play" width="646" height="250" />
+	</a>
+</div>
+
+<style>
+	.stores {
+		display: flex;
+		align-items: center;
+		gap: 0.7em;
+		flex-wrap: wrap;
+		margin-top: 1.6em;
+	}
+	.stores.center {
+		justify-content: center;
+	}
+	.store {
+		display: inline-flex;
+		align-items: center;
+		text-decoration: none;
+		transition: transform 0.2s;
+	}
+	.store:hover {
+		transform: translateY(-2px);
+	}
+
+	/* Apple 官方 SVG（108.85x40）無留白，直接設高度 44px */
+	.apple img {
+		display: block;
+		height: 44px;
+		width: auto;
+		border-radius: 0;
+	}
+
+	/* 646x250 圖中徽章本體約佔 76% 高度 → 顯示 58px 高時可見約 44px，負 margin 吃掉留白 */
+	.google img {
+		display: block;
+		height: 58px;
+		width: auto;
+		margin: -7px -6px;
+		border-radius: 0;
+	}
+</style>

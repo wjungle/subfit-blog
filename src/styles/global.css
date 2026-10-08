@@ -10,9 +10,10 @@
 	box-sizing: border-box;
 }
 
+/* 用 clip 而不是 hidden：hidden 會讓 body 變成捲動容器，導致 header 的 position: sticky 失效 */
 html,
 body {
-	overflow-x: hidden;
+	overflow-x: clip;
 	max-width: 100%;
 }
 
