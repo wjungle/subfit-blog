@@ -270,3 +270,35 @@ hr {
 	font-weight: 700;
 	letter-spacing: 0.08em;
 }
+
+/* ===== 版面：首頁各區塊共用（首頁與 TrainingFlow 等元件都會用到） ===== */
+.container {
+	max-width: 1120px;
+	margin: 0 auto;
+	padding: 0 1.25em;
+}
+section {
+	scroll-margin-top: 80px;
+}
+.section-head {
+	text-align: center;
+	margin-bottom: 2.5em;
+}
+.section-head h2 {
+	margin-top: 0.5em;
+	font-size: 2em;
+	font-weight: 900;
+}
+.nowrap {
+	white-space: nowrap;
+}
+.section-sub {
+	margin: 0.4em 0 0;
+	color: rgb(var(--gray));
+	font-size: 0.95em;
+}
+@media (max-width: 820px) {
+	.section-head h2 {
+		font-size: 1.6em;
+	}
+}

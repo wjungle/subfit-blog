@@ -7,6 +7,7 @@ import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import PostGrid from '../components/PostGrid.astro';
 import StoreBadges from '../components/StoreBadges.astro';
+import TrainingFlow from '../components/TrainingFlow.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { faqs } from '../data/faqs';
 import heroImage from '../assets/hero.jpg';
@@ -26,19 +27,6 @@ const screenshotModules = import.meta.glob<{ default: ImageMetadata }>(
 const screenshots = Object.keys(screenshotModules)
 	.sort()
 	.map((k) => screenshotModules[k].default);
-
-// 訓練流程：對應主 app 的 SESSION_BLOCKS（批次暖身）+ 練法設定中的逐句訓練（不含純聽），
-// 說明取自 app 內各階段的 desc；bg 為 app 訓練畫面該階段的背景色（trainingStates.js 的 bgGame，Tailwind v4 色值）
-const steps = [
-	{ name: '盲聽', group: '整段暖身', bg: '#0f172b', desc: '連續播放，純用耳朵感受語感' },
-	{ name: '理解', group: '整段暖身', bg: '#1c398e', desc: '聽英文看中文字幕，建立語意連結' },
-	{ name: '看聽', group: '逐句精練', bg: '#1c398e', desc: '文字聲音對齊，可點開譯文' },
-	{ name: '跟讀', group: '逐句精練', bg: '#104e64', desc: '看中文回想英文，揭曉後跟讀' },
-	{ name: '開口', group: '逐句精練', bg: '#7b3306', desc: '模仿、錄音，並與原音比對' },
-	{ name: '剝離', group: '逐句精練', bg: '#8b0836', desc: '只看首字，憑直覺說出整句' },
-	{ name: '聽譯', group: '逐句精練', bg: '#18181b', desc: '聽中文意思，腦中反射英文' },
-	{ name: '確認', group: '逐句精練', bg: '#004f3b', desc: '揭曉答案、AI 解說，確認記憶' },
-];
 
 const features = [
 	{
@@ -133,34 +121,8 @@ const plans = [
 				</p>
 			</section>
 
-			<!-- ============ 訓練流程 ============ -->
-			<section class="flow container">
-				<div class="section-head">
-					<span class="eyebrow">TRAINING FLOW</span>
-					<h2>SubFit 帶你走過 <span class="nowrap">8 個階段</span></h2>
-					<p class="section-sub">每個階段都能在「練法設定」開關、調整順序，練成你自己的節奏</p>
-				</div>
-				<ol class="steps">
-					{
-						steps.map((s, i) => (
-							<li style={`--bg:${s.bg}`}>
-								<div class="step-top">
-									<span class="step-no">{String(i + 1).padStart(2, '0')}</span>
-									<span class="step-group">{s.group}</span>
-								</div>
-								{/* 仿 app 訓練畫面上方的分段進度條 */}
-								<span class="step-progress" aria-hidden="true">
-									{steps.map((_, j) => (
-										<i class:list={{ on: j <= i }} />
-									))}
-								</span>
-								<strong>{s.name}</strong>
-								<span class="step-desc">{s.desc}</span>
-							</li>
-						))
-					}
-				</ol>
-			</section>
+			<!-- ============ 訓練流程（可切換模板） ============ -->
+			<TrainingFlow />
 
 			<!-- ============ 功能 ============ -->
 			<section id="features" class="features-wrap">
@@ -312,31 +274,6 @@ const plans = [
 		margin: 0;
 		padding: 0;
 	}
-	.container {
-		max-width: 1120px;
-		margin: 0 auto;
-		padding: 0 1.25em;
-	}
-	section {
-		scroll-margin-top: 80px;
-	}
-	.section-head {
-		text-align: center;
-		margin-bottom: 2.5em;
-	}
-	.section-head h2 {
-		margin-top: 0.5em;
-		font-size: 2em;
-		font-weight: 900;
-	}
-	.nowrap {
-		white-space: nowrap;
-	}
-	.section-sub {
-		margin: 0.4em 0 0;
-		color: rgb(var(--gray));
-		font-size: 0.95em;
-	}
 	.section-head.row {
 		display: flex;
 		align-items: flex-end;
@@ -440,77 +377,6 @@ const plans = [
 		font-size: 1.7em;
 		color: rgb(var(--black));
 		margin-bottom: 0.6em;
-	}
-
-	/* ---------- 流程 ---------- */
-	.flow {
-		padding-bottom: 5em;
-	}
-	.steps {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: 1em;
-	}
-	/* 卡片底色 = app 訓練畫面該階段的背景色 */
-	.steps li {
-		display: flex;
-		flex-direction: column;
-		gap: 0.45em;
-		padding: 1.3em 1.3em 1.4em;
-		background: var(--bg);
-		border-radius: var(--radius);
-		color: #fff;
-		box-shadow: 0 6px 18px rgba(var(--black), 0.12);
-		transition: transform 0.2s;
-	}
-	.steps li:hover {
-		transform: translateY(-3px);
-	}
-	.step-top {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-	.step-no {
-		font-size: 0.8em;
-		font-weight: 700;
-		color: #fdc700;
-		letter-spacing: 0.1em;
-	}
-	.step-group {
-		font-size: 0.7em;
-		font-weight: 600;
-		padding: 0.1em 0.7em;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.12);
-		color: rgba(255, 255, 255, 0.8);
-	}
-	/* 分段進度條：走到第幾階段就亮幾格，象徵「越練越熟」 */
-	.step-progress {
-		display: flex;
-		gap: 4px;
-		margin: 0.3em 0 0.5em;
-	}
-	.step-progress i {
-		flex: 1;
-		height: 5px;
-		border-radius: 999px;
-		background: rgba(255, 255, 255, 0.15);
-	}
-	.step-progress i.on {
-		background: #fdc700;
-	}
-	.steps strong {
-		font-size: 1.25em;
-		color: #fff;
-	}
-	.step-desc {
-		font-size: 0.85em;
-		color: rgba(255, 255, 255, 0.72);
-		line-height: 1.6;
 	}
 
 	/* ---------- 功能 ---------- */
@@ -773,9 +639,6 @@ const plans = [
 
 	/* ---------- RWD ---------- */
 	@media (max-width: 960px) {
-		.steps {
-			grid-template-columns: repeat(2, 1fr);
-		}
 		.features {
 			grid-template-columns: repeat(2, 1fr);
 		}
@@ -791,35 +654,12 @@ const plans = [
 		.hero h1 {
 			font-size: 1.85em;
 		}
-		.section-head h2 {
-			font-size: 1.6em;
-		}
 		.plans {
 			grid-template-columns: 1fr;
 			max-width: 420px;
 		}
 	}
 	@media (max-width: 600px) {
-		.steps {
-			grid-template-columns: 1fr;
-			gap: 0.7em;
-		}
-		/* 手機版卡片壓扁：名稱與說明並排，避免 9 張卡拉得太長 */
-		.steps li {
-			display: grid;
-			grid-template-columns: auto 1fr;
-			grid-template-areas:
-				'top top'
-				'bar bar'
-				'name desc';
-			align-items: center;
-			column-gap: 1em;
-			padding: 1em 1.1em;
-		}
-		.step-top { grid-area: top; }
-		.step-progress { grid-area: bar; margin: 0.2em 0; }
-		.steps strong { grid-area: name; font-size: 1.1em; }
-		.step-desc { grid-area: desc; }
 		.features {
 			grid-template-columns: 1fr;
 		}

@@ -1,0 +1,284 @@
+---
+// 首頁「訓練流程」區塊：上方模板切換鈕（仿 app 的練法設定），下方顯示該模板的階段卡片。
+// 每個模板的卡片在 build 時就全部產生（利於 SEO、無 JS 也看得到預設模板），
+// 前端只負責切換顯示哪一組。
+import { FLOW_PRESETS, PHASES } from '../data/flowPresets';
+
+const DEFAULT_ID = 'full';
+const defaultPreset = FLOW_PRESETS.find((p) => p.id === DEFAULT_ID)!;
+---
+
+<section class="flow container" data-flow>
+	<div class="section-head">
+		<span class="eyebrow">TRAINING FLOW</span>
+		<h2>SubFit 帶你走過 <span class="nowrap"><span data-flow-count>{defaultPreset.phases.length}</span> 個階段</span></h2>
+		<p class="section-sub">選一種練法看看；在 App 的「練法設定」還能自由開關、調整順序</p>
+	</div>
+
+	<div class="presets" role="tablist" aria-label="訓練模板">
+		{
+			FLOW_PRESETS.map((p) => (
+				<button
+					type="button"
+					role="tab"
+					id={`flow-tab-${p.id}`}
+					aria-controls={`flow-panel-${p.id}`}
+					aria-selected={p.id === DEFAULT_ID ? 'true' : 'false'}
+					tabindex={p.id === DEFAULT_ID ? 0 : -1}
+					data-preset={p.id}
+					data-count={p.phases.length}
+				>
+					{p.name}
+				</button>
+			))
+		}
+	</div>
+
+	{
+		FLOW_PRESETS.map((p) => (
+			<div
+				class="panel"
+				role="tabpanel"
+				id={`flow-panel-${p.id}`}
+				aria-labelledby={`flow-tab-${p.id}`}
+				hidden={p.id !== DEFAULT_ID}
+			>
+				<p class="preset-desc">{p.desc}</p>
+				<ol class="steps">
+					{p.phases.map((id, i) => {
+						const s = PHASES[id];
+						return (
+							<li style={`--bg:${s.bg}; --delay:${i * 45}ms`}>
+								<div class="step-top">
+									<span class="step-no">{String(i + 1).padStart(2, '0')}</span>
+									<span class="step-group">{s.group}</span>
+								</div>
+								{/* 仿 app 訓練畫面上方的分段進度條 */}
+								<span class="step-progress" aria-hidden="true">
+									{p.phases.map((_, j) => (
+										<i class:list={{ on: j <= i }} />
+									))}
+								</span>
+								<strong>{s.name}</strong>
+								<span class="step-desc">{s.desc}</span>
+							</li>
+						);
+					})}
+				</ol>
+			</div>
+		))
+	}
+</section>
+
+<script>
+	// 模板切換：點按鈕 → 顯示對應的卡片組、更新標題的階段數
+	document.querySelectorAll<HTMLElement>('[data-flow]').forEach((root) => {
+		const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+		const count = root.querySelector('[data-flow-count]');
+
+		const select = (tab: HTMLButtonElement) => {
+			tabs.forEach((t) => {
+				const on = t === tab;
+				t.setAttribute('aria-selected', String(on));
+				t.tabIndex = on ? 0 : -1;
+				const panel = root.querySelector<HTMLElement>(`#${t.getAttribute('aria-controls')}`);
+				if (panel) panel.hidden = !on;
+			});
+			if (count) count.textContent = tab.dataset.count ?? '';
+		};
+
+		tabs.forEach((tab, i) => {
+			tab.addEventListener('click', () => select(tab));
+			// 鍵盤左右鍵切換（tablist 的標準操作）
+			tab.addEventListener('keydown', (e) => {
+				if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+				const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+				next.focus();
+				select(next);
+			});
+		});
+	});
+</script>
+
+<style>
+	.flow {
+		padding-bottom: 5em;
+	}
+
+	/* ---------- 模板切換鈕 ---------- */
+	.presets {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.6em;
+		margin-bottom: 1.2em;
+	}
+	.presets button {
+		font: inherit;
+		font-size: 0.92em;
+		font-weight: 600;
+		padding: 0.5em 1.2em;
+		border-radius: 999px;
+		border: 1.5px solid rgba(var(--black), 0.14);
+		background: var(--card);
+		color: rgb(var(--gray-dark));
+		cursor: pointer;
+		transition:
+			background 0.2s,
+			color 0.2s,
+			border-color 0.2s,
+			box-shadow 0.2s;
+	}
+	.presets button:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+	.presets button[aria-selected='true'] {
+		background: var(--brand-gradient);
+		border-color: transparent;
+		color: #fff;
+		box-shadow: var(--box-shadow-accent);
+	}
+	.presets button:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.preset-desc {
+		text-align: center;
+		color: rgb(var(--gray));
+		font-size: 0.92em;
+		margin: 0 auto 1.8em;
+		max-width: 640px;
+	}
+
+	/* ---------- 階段卡片 ---------- */
+	/* 用 flex 置中：模板階段數 3～8 不等，數量少時卡片也會置中而不是靠左 */
+	.steps {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 1em;
+	}
+	/* 卡片底色 = app 訓練畫面該階段的背景色 */
+	.steps li {
+		flex: 0 1 calc((100% - 3em) / 4);
+		display: flex;
+		flex-direction: column;
+		gap: 0.45em;
+		padding: 1.3em 1.3em 1.4em;
+		background: var(--bg);
+		border-radius: var(--radius);
+		color: #fff;
+		box-shadow: 0 6px 18px rgba(var(--black), 0.12);
+		transition: transform 0.2s;
+		animation: card-in 0.35s ease-out both;
+		animation-delay: var(--delay);
+	}
+	.steps li:hover {
+		transform: translateY(-3px);
+	}
+	/* 切換模板時卡片依序浮現 */
+	@keyframes card-in {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.steps li {
+			animation: none;
+		}
+	}
+	.step-top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	.step-no {
+		font-size: 0.8em;
+		font-weight: 700;
+		color: #fdc700;
+		letter-spacing: 0.1em;
+	}
+	.step-group {
+		font-size: 0.7em;
+		font-weight: 600;
+		padding: 0.1em 0.7em;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.12);
+		color: rgba(255, 255, 255, 0.8);
+	}
+	/* 分段進度條：走到第幾階段就亮幾格，象徵「越練越熟」 */
+	.step-progress {
+		display: flex;
+		gap: 4px;
+		margin: 0.3em 0 0.5em;
+	}
+	.step-progress i {
+		flex: 1;
+		height: 5px;
+		border-radius: 999px;
+		background: rgba(255, 255, 255, 0.15);
+	}
+	.step-progress i.on {
+		background: #fdc700;
+	}
+	.steps strong {
+		font-size: 1.25em;
+		color: #fff;
+	}
+	.step-desc {
+		font-size: 0.85em;
+		color: rgba(255, 255, 255, 0.72);
+		line-height: 1.6;
+	}
+
+	@media (max-width: 960px) {
+		.steps li {
+			flex-basis: calc((100% - 1em) / 2);
+		}
+	}
+	@media (max-width: 600px) {
+		.presets {
+			gap: 0.45em;
+		}
+		.presets button {
+			padding: 0.45em 0.95em;
+			font-size: 0.85em;
+		}
+		.steps {
+			gap: 0.7em;
+		}
+		/* 手機版卡片壓扁：名稱與說明並排，避免卡片拉得太長 */
+		.steps li {
+			flex-basis: 100%;
+			display: grid;
+			grid-template-columns: auto 1fr;
+			grid-template-areas:
+				'top top'
+				'bar bar'
+				'name desc';
+			align-items: center;
+			column-gap: 1em;
+			padding: 1em 1.1em;
+		}
+		.step-top {
+			grid-area: top;
+		}
+		.step-progress {
+			grid-area: bar;
+			margin: 0.2em 0;
+		}
+		.steps strong {
+			grid-area: name;
+			font-size: 1.1em;
+		}
+		.step-desc {
+			grid-area: desc;
+		}
+	}
+</style>
