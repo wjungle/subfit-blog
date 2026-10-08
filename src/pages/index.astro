@@ -4,8 +4,8 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
-import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import PostGrid from '../components/PostGrid.astro';
 import StoreBadges from '../components/StoreBadges.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { faqs } from '../data/faqs';
@@ -221,31 +221,7 @@ const plans = [
 								查看全部 →
 							</a>
 						</div>
-						<div class="post-grid">
-							{posts.map((post) => (
-								<a href={`/blog/${post.id}/`} class="post-card">
-									<div class="post-thumb">
-										{post.data.heroImage ? (
-											<Image src={post.data.heroImage} alt="" width={640} height={320} />
-										) : (
-											<div class="thumb-placeholder" aria-hidden="true">
-												<span />
-												<span />
-												<span />
-											</div>
-										)}
-									</div>
-									<div class="post-card-body">
-										<p class="post-date">
-											<FormattedDate date={post.data.pubDate} />
-										</p>
-										<h3 class="post-title">{post.data.title}</h3>
-										<p class="post-desc">{post.data.description}</p>
-										<span class="post-read">閱讀全文 →</span>
-									</div>
-								</a>
-							))}
-						</div>
+						<PostGrid posts={posts} />
 					</section>
 				)
 			}
@@ -582,93 +558,6 @@ const plans = [
 		text-decoration: none;
 		white-space: nowrap;
 	}
-	.post-grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1.25em;
-	}
-	.post-card {
-		display: flex;
-		flex-direction: column;
-		border-radius: var(--radius);
-		overflow: hidden;
-		text-decoration: none;
-		color: inherit;
-		background: var(--card);
-		border: 1px solid rgb(var(--gray-light));
-		transition:
-			transform 0.2s,
-			box-shadow 0.2s;
-	}
-	.post-card:hover {
-		color: inherit;
-		transform: translateY(-4px);
-		box-shadow: var(--box-shadow);
-	}
-	.post-thumb {
-		aspect-ratio: 2 / 1;
-		background: var(--cream-deep);
-	}
-	.post-thumb :global(img) {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		border-radius: 0;
-	}
-	/* 沒有封面圖時用字幕條當佔位 */
-	.thumb-placeholder {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: 10px;
-		padding: 0 14%;
-		background:
-			radial-gradient(circle at 85% 20%, rgba(239, 133, 25, 0.22), transparent 50%),
-			var(--cream-deep);
-	}
-	.thumb-placeholder span {
-		height: 12px;
-		border-radius: 999px;
-		background: var(--brand-gradient);
-		opacity: 0.75;
-	}
-	.thumb-placeholder span:nth-child(1) { width: 85%; }
-	.thumb-placeholder span:nth-child(2) { width: 60%; opacity: 0.5; }
-	.thumb-placeholder span:nth-child(3) { width: 12px; opacity: 0.6; }
-	.post-card-body {
-		display: flex;
-		flex-direction: column;
-		flex: 1;
-		padding: 1.3em 1.4em 1.4em;
-	}
-	.post-date {
-		font-size: 0.78em;
-		color: rgb(var(--gray));
-		margin: 0 0 0.4em;
-	}
-	.post-title {
-		font-size: 1.05em;
-		line-height: 1.45;
-		margin: 0 0 0.5em;
-	}
-	.post-desc {
-		font-size: 0.85em;
-		color: rgb(var(--gray));
-		line-height: 1.65;
-		margin: 0 0 1em;
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-	.post-read {
-		margin-top: auto;
-		font-size: 0.85em;
-		font-weight: 700;
-		color: var(--accent);
-	}
-
 	/* ---------- 價格 ---------- */
 	.pricing {
 		padding-top: 5em;
@@ -841,8 +730,7 @@ const plans = [
 		.steps {
 			grid-template-columns: repeat(3, 1fr);
 		}
-		.features,
-		.post-grid {
+		.features {
 			grid-template-columns: repeat(2, 1fr);
 		}
 	}
@@ -869,8 +757,7 @@ const plans = [
 		.steps {
 			grid-template-columns: 1fr 1fr;
 		}
-		.features,
-		.post-grid {
+		.features {
 			grid-template-columns: 1fr;
 		}
 		.quote {

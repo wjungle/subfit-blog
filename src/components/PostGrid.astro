@@ -1,0 +1,144 @@
+---
+// 文章卡片網格：首頁「學習心法與技巧」與 /blog 列表頁共用。
+// 有 heroImage 就顯示封面圖（裁成 2:1），沒有就顯示品牌字幕條佔位圖。
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+	// 標題層級：首頁區塊標題是 h2 → 卡片用 h3；/blog 頁標題是 h1 → 卡片用 h2
+	headingTag?: 'h2' | 'h3';
+}
+
+const { posts, headingTag: Heading = 'h3' } = Astro.props;
+---
+
+<div class="post-grid">
+	{
+		posts.map((post) => (
+			<a href={`/blog/${post.id}/`} class="post-card">
+				<div class="post-thumb">
+					{post.data.heroImage ? (
+						<Image src={post.data.heroImage} alt="" width={640} height={320} />
+					) : (
+						<div class="thumb-placeholder" aria-hidden="true">
+							<span />
+							<span />
+							<span />
+						</div>
+					)}
+				</div>
+				<div class="post-card-body">
+					<p class="post-date">
+						<FormattedDate date={post.data.pubDate} />
+					</p>
+					<Heading class="post-title">{post.data.title}</Heading>
+					<p class="post-desc">{post.data.description}</p>
+					<span class="post-read">閱讀全文 →</span>
+				</div>
+			</a>
+		))
+	}
+</div>
+
+<style>
+	.post-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1.25em;
+	}
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		border-radius: var(--radius);
+		overflow: hidden;
+		text-decoration: none;
+		color: inherit;
+		background: var(--card);
+		border: 1px solid rgb(var(--gray-light));
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
+	}
+	.post-card:hover {
+		color: inherit;
+		transform: translateY(-4px);
+		box-shadow: var(--box-shadow);
+	}
+	.post-thumb {
+		aspect-ratio: 2 / 1;
+		background: var(--cream-deep);
+	}
+	.post-thumb :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+	}
+	/* 沒有封面圖時用字幕條當佔位 */
+	.thumb-placeholder {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 10px;
+		padding: 0 14%;
+		background:
+			radial-gradient(circle at 85% 20%, rgba(239, 133, 25, 0.22), transparent 50%),
+			var(--cream-deep);
+	}
+	.thumb-placeholder span {
+		height: 12px;
+		border-radius: 999px;
+		background: var(--brand-gradient);
+		opacity: 0.75;
+	}
+	.thumb-placeholder span:nth-child(1) { width: 85%; }
+	.thumb-placeholder span:nth-child(2) { width: 60%; opacity: 0.5; }
+	.thumb-placeholder span:nth-child(3) { width: 12px; opacity: 0.6; }
+	.post-card-body {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		padding: 1.3em 1.4em 1.4em;
+	}
+	.post-date {
+		font-size: 0.78em;
+		color: rgb(var(--gray));
+		margin: 0 0 0.4em;
+	}
+	.post-title {
+		font-size: 1.05em;
+		line-height: 1.45;
+		margin: 0 0 0.5em;
+	}
+	.post-desc {
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+		line-height: 1.65;
+		margin: 0 0 1em;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.post-read {
+		margin-top: auto;
+		font-size: 0.85em;
+		font-weight: 700;
+		color: var(--accent);
+	}
+
+	@media (max-width: 960px) {
+		.post-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 600px) {
+		.post-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
