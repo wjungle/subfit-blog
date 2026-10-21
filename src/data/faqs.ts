@@ -21,6 +21,11 @@ export const faqs: { question: string; answer: string }[] = [
 			'直接開啟 https://subfit.app，選擇內建課程或匯入自己的 SRT 字幕檔，點「開始訓練」即可，不需要註冊帳號就能先試。登入後使用免費方案，每月可以練 50 句新句子；想練更多，可以升級 Plus（每月 200 句）或 Pro（無限句數）。',
 	},
 	{
+		question: '為什麼 App 裡的訂閱價格比網頁版貴？',
+		answer:
+			'在 App 裡訂閱是透過 Google Play 或 App Store 付款，平台會從每筆訂閱抽取一定比例的手續費，所以 App 內的價格要把這部分成本算進去。網頁版直接付款，沒有平台抽成，價格比較低。訂閱是綁在帳號上的，在網頁版 https://subfit.app 訂閱後，用同一個帳號登入手機 App，一樣可以使用付費功能。',
+	},
+	{
 		question: 'SubFit 支援哪些語言？',
 		answer:
 			'目前主要支援英文，也可以練日文、荷蘭文等有 SRT 字幕的示範課程。AI 講解與翻譯功能以繁體中文為母語設計。',
