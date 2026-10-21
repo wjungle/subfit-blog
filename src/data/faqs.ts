@@ -3,7 +3,7 @@ export const faqs: { question: string; answer: string }[] = [
 	{
 		question: 'SubFit 是什麼？',
 		answer:
-			'SubFit 是免費的英文聽力與口說練習工具，完整實作 100LS 跟讀法與回音法。匯入任何 SRT 字幕檔，就能開始一句一句的聽力與跟讀訓練。',
+			'SubFit 是英文聽力與口說練習工具，完整實作 100LS 跟讀法與回音法。匯入任何 SRT 字幕檔，就能開始一句一句的聽力與跟讀訓練。基本功能免費，需要更多訓練句數或 AI 功能時，可以升級 Plus 或 Pro 方案。',
 	},
 	{
 		question: '什麼是 100LS 跟讀法？',
@@ -18,7 +18,7 @@ export const faqs: { question: string; answer: string }[] = [
 	{
 		question: '要怎麼開始用 SubFit 練 100LS？',
 		answer:
-			'直接開啟 https://subfit.app，選擇內建課程或匯入自己的 SRT 字幕檔，點「開始訓練」即可。不需要註冊帳號，完全免費。',
+			'直接開啟 https://subfit.app，選擇內建課程或匯入自己的 SRT 字幕檔，點「開始訓練」即可，不需要註冊帳號就能先試。登入後使用免費方案，每月可以練 50 句新句子；想練更多，可以升級 Plus（每月 200 句）或 Pro（無限句數）。',
 	},
 	{
 		question: 'SubFit 支援哪些語言？',
