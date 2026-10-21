@@ -17,11 +17,9 @@ Astro 輸出純靜態 HTML，爬蟲完整可讀。兩個 repo 完全獨立，互
 
 ## 部署策略
 
-- **現在**：`subfit-blog.vercel.app`（Vercel 自動偵測 Astro，`vercel` 指令即可）
-- **買好 `subfit.app` 域名後**：
-  1. 改 `astro.config.mjs` 的 `site` 為 `https://blog.subfit.app`
-  2. Vercel Dashboard → 專案 → Settings → Domains → 加入 `blog.subfit.app`
-  3. 重新 deploy
+- **正式網址**：`https://blog.subfit.app`（`astro.config.mjs` 的 `site` 已設定）。`subfit-blog.vercel.app` 會 307 轉址到正式網域。
+- **發佈流程**：commit → `vercel --prod` 部署到正式網站 → `git push` 同步到 GitHub。
+- **部署後檢查**：用 `curl` 確認 `https://blog.subfit.app` 的頁面回 200。要打正式網域，打 `subfit-blog.vercel.app` 只會得到 307。
 
 ## 常用指令
 
@@ -29,7 +27,7 @@ Astro 輸出純靜態 HTML，爬蟲完整可讀。兩個 repo 完全獨立，互
 npm run dev      # 啟動開發伺服器（localhost:4321）
 npm run build    # 建置靜態網站至 ./dist/
 npm run preview  # 預覽建置結果
-vercel           # 部署到 Vercel
+vercel --prod    # 部署到 Vercel 正式網站
 ```
 
 > Git Bash 無法直接執行 `astro` 指令，一律用 `npm run <script>`。
@@ -59,8 +57,13 @@ title: '文章標題'
 description: '文章摘要（也用於 SEO meta description）'
 pubDate: 'YYYY-MM-DD'
 heroImage: './hero.jpg'   # 可選，放在同目錄或 src/assets/
+draft: true               # 可選，設為 true 即隱藏（不產生頁面、不進列表/RSS/sitemap）
 ---
 ```
+
+- **有附圖的文章**：一篇一個資料夾，如 `src/content/blog/<slug>/index.mdx`，圖片放同資料夾，用 `![說明](./1.jpg)` 引用（Astro 會自動轉 webp）。網址仍是 `/blog/<slug>/`。
+- **表格**：MDX 已開 GFM（`astro.config.mjs` 的 `mdx({ gfm: true })`）。儲存格內**不要寫 `<br/>`**，MDX 會當成 JSX 元件，整個表格就不會被解析。
+- **從 Threads 轉文章**：使用者把貼文文字和附圖放在 `threads-import/`（已加入 gitignore），同一則貼文的檔案用相同編號開頭（如 `01-xxx.txt`、`01-xxx-1.jpg`）。擴寫時保留使用者原本的觀點，SubFit 功能要對照主 app 程式碼確認後才寫。
 
 ## 注意事項
 
