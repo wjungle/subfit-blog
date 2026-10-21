@@ -14,7 +14,7 @@ import heroImage from '../assets/hero.jpg';
 
 const APP_URL = 'https://subfit.app';
 
-const posts = (await getCollection('blog'))
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 	.slice(0, 6);
 

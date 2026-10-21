@@ -14,6 +14,8 @@ const blog = defineCollection({
 			pubDate: z.coerce.date(),
 			updatedDate: z.coerce.date().optional(),
 			heroImage: z.optional(image()),
+			// 設為 true 即隱藏文章（不產生頁面、不列入列表/RSS/sitemap）
+			draft: z.boolean().optional(),
 		}),
 });
 
