@@ -18,7 +18,7 @@ export const faqs: { question: string; answer: string }[] = [
 	{
 		question: '為什麼 App 裡的訂閱價格比網頁版貴？',
 		answer:
-			'在 App 裡訂閱是透過 Google Play 或 App Store 付款，平台會從每筆訂閱抽取一定比例的手續費，所以 App 內的價格要把這部分成本算進去。網頁版直接付款，沒有平台抽成，價格比較低。訂閱是綁在帳號上的，在網頁版 https://subfit.app 訂閱後，用同一個帳號登入手機 App，一樣可以使用付費功能。',
+			'在 App 裡訂閱是透過 Google Play 或 App Store 付款，平台會從每筆訂閱抽取一定比例的手續費，所以 App 內的價格要把這部分成本算進去。網頁版則是透過台灣本土的金流服務付款，手續費相對低很多，所以價格比較低。訂閱是綁在帳號上的，在網頁版 https://subfit.app 訂閱後，用同一個帳號登入手機 App，一樣可以使用付費功能。',
 	},
 	{
 		question: 'SubFit 如何實作 100LS 的跟讀流程？',
