@@ -18,7 +18,8 @@ Astro 輸出純靜態 HTML，爬蟲完整可讀。兩個 repo 完全獨立，互
 ## 部署策略
 
 - **正式網址**：`https://blog.subfit.app`（`astro.config.mjs` 的 `site` 已設定）。`subfit-blog.vercel.app` 會 307 轉址到正式網域。
-- **發佈流程**：commit → `vercel --prod` 部署到正式網站 → `git push` 同步到 GitHub。
+- **發佈流程**：Vercel 專案已接 GitHub，**push 到 `main` 就會自動部署到 Production**，不需要另外跑 `vercel --prod`。WSL 沒有 GitHub 憑證，push 由使用者自己做。
+- **CLI 部署**：`vercel --prod` 會直接上傳本機檔案（包含還沒 commit 的改動），只在 GitHub 推不上去時使用；`vercel` 不加 `--prod` 是部署 Preview。
 - **部署後檢查**：用 `curl` 確認 `https://blog.subfit.app` 的頁面回 200。要打正式網域，打 `subfit-blog.vercel.app` 只會得到 307。
 
 ## 常用指令
@@ -27,7 +28,8 @@ Astro 輸出純靜態 HTML，爬蟲完整可讀。兩個 repo 完全獨立，互
 npm run dev      # 啟動開發伺服器（localhost:4321）
 npm run build    # 建置靜態網站至 ./dist/
 npm run preview  # 預覽建置結果
-vercel --prod    # 部署到 Vercel 正式網站
+git push         # 推到 main 即自動部署到正式網站
+vercel           # 部署 Preview（不影響正式網站）
 ```
 
 > Git Bash 無法直接執行 `astro` 指令，一律用 `npm run <script>`。
