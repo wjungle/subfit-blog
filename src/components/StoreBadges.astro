@@ -41,6 +41,10 @@ const PLAY_URL = 'https://play.google.com/store/apps/details?id=app.subfit.app';
 	.store:hover {
 		transform: translateY(-2px);
 	}
+	/* 放在文章內文（.prose）時，會被套上圖片陰影；Google PNG 自帶透明留白，陰影會框出整張圖 */
+	.store img {
+		box-shadow: none;
+	}
 
 	/* Apple 官方 SVG（108.85x40）無留白，直接設高度 44px */
 	.apple img {
