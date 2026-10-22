@@ -114,9 +114,9 @@ const plans = [
 
 			<!-- ============ 理念 ============ -->
 			<section class="belief container">
-				<p class="quote">「大量聽」不等於「聽懂」。</p>
+				<p class="quote"><span class="phrase">「學了很多年」</span><span class="phrase">不等於「聽得懂」。</span></p>
 				<p>
-					聽了幾百小時還是霧煞煞，問題通常不是聽得不夠多，而是沒有把一句話真正拆開來聽、開口說。
+					學了這麼多年英文，還是聽不懂？問題通常不是學得不夠久，而是沒有把一句話真正拆開來聽、開口說。
 					SubFit 把 <a href="/blog/what-is-100ls/">100LS 跟讀法</a>的流程做成 App：一次只專心一句，從聽懂到說出口。
 				</p>
 			</section>
@@ -377,6 +377,10 @@ const plans = [
 		font-size: 1.7em;
 		color: rgb(var(--black));
 		margin-bottom: 0.6em;
+	}
+	/* 窄螢幕只在兩段之間斷行，避免「懂」字單獨掉到下一行 */
+	.quote .phrase {
+		display: inline-block;
 	}
 
 	/* ---------- 功能 ---------- */
