@@ -21,6 +21,16 @@ export const faqs: { question: string; answer: string }[] = [
 			'在 App 裡訂閱是透過 Google Play 或 App Store 付款，平台會從每筆訂閱抽取一定比例的手續費，所以 App 內的價格要把這部分成本算進去。網頁版則是透過台灣本土的金流服務付款，手續費相對低很多，所以價格比較低。訂閱是綁在帳號上的，在網頁版 https://subfit.app 訂閱後，用同一個帳號登入手機 App，一樣可以使用付費功能。',
 	},
 	{
+		question: '在網頁版、Android、iOS 其中一個平台開通會員，其他平台也能用嗎？',
+		answer:
+			'可以。會員資格綁在帳號上，不論你是在網頁版、Android 還是 iOS 開通，只要用同一個帳號登入，三個平台都能使用付費功能。唯一要注意的是：Android App 不提供 Apple ID 登入，如果你是用 Apple ID 登入，在 Android 上就沒辦法登入同一個帳號。',
+	},
+	{
+		question: '我有英單課程的解鎖碼，要在哪裡輸入？',
+		answer:
+			'Android：下載 App 後，在課程庫直接輸入解鎖碼就好。\n\niOS：因為 iOS App 不開放輸入解鎖碼，請依下列步驟操作：\n1. 到 https://subfit.app 登入帳號\n2. 在網站的課程庫輸入解鎖碼\n3. 下載 SubFit App，用同一個帳號登入\n4. 稍等一下，英單課程就會出現',
+	},
+	{
 		question: 'SubFit 如何實作 100LS 的跟讀流程？',
 		answer:
 			'SubFit 把每句字幕拆成獨立訓練單位，依序走過「純聽 → 看聽 → 跟讀錄音 → AI 發音對比 → 間隔重複複習」五個階段，對應 100LS 的完整學習循環。AI 自然發音取代真人錄音，AI 句子講解補充文法與語意。',
