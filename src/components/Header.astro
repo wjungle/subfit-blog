@@ -5,8 +5,10 @@ const links = [
 	{ href: '/', label: '首頁' },
 	{ href: '/#features', label: '功能' },
 	{ href: '/blog', label: '文章' },
-	{ href: '/pricing', label: '價格' },
-	{ href: '/faq', label: 'FAQ' },
+	// 價格、FAQ 先跳到首頁的精簡版區塊，區塊底下再連到獨立頁；
+	// activePath：在獨立頁（/pricing、/faq）時，這個選項仍要亮
+	{ href: '/#pricing', label: '價格', activePath: '/pricing' },
+	{ href: '/#faq', label: 'FAQ', activePath: '/faq' },
 	{ href: '/about', label: '關於' },
 ];
 ---
@@ -24,7 +26,7 @@ const links = [
 
 		<div class="menu" id="site-menu">
 			<div class="links">
-				{links.map((l) => <HeaderLink href={l.href}>{l.label}</HeaderLink>)}
+				{links.map((l) => <HeaderLink href={l.href} activePath={l.activePath}>{l.label}</HeaderLink>)}
 			</div>
 			<a href="https://subfit.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary app-cta">
 				免費試用
@@ -50,21 +52,24 @@ const links = [
 		}),
 	);
 
-	// 首頁的「功能」是錨點（/#features），build 時只看得到路徑 "/"，
-	// 所以改在瀏覽器依捲動位置判斷：畫面停在 #features 區塊時亮「功能」，否則亮「首頁」
-	const features = document.getElementById('features');
+	// 首頁的「功能／價格／FAQ」是錨點（/#features 等），build 時只看得到路徑 "/"，
+	// 所以改在瀏覽器依捲動位置判斷：判斷線落在哪個區塊就亮哪個，都不在就亮「首頁」
 	const homeLink = header?.querySelector<HTMLAnchorElement>('.links a[href="/"]');
-	const featuresLink = header?.querySelector<HTMLAnchorElement>('.links a[href="/#features"]');
-	if (location.pathname === '/' && features && homeLink && featuresLink) {
+	const spies = Array.from(header?.querySelectorAll<HTMLAnchorElement>('.links a[href^="/#"]') ?? [])
+		.map((link) => ({ link, section: document.getElementById(link.hash.slice(1)) }))
+		.filter((s): s is { link: HTMLAnchorElement; section: HTMLElement } => s.section !== null);
+	if (location.pathname === '/' && homeLink && spies.length > 0) {
 		let ticking = false;
 		const update = () => {
 			ticking = false;
-			// 以 header 下緣為基準線，基準線落在區塊內就算「在功能區」
-			const line = (header?.getBoundingClientRect().bottom ?? 0) + 1;
-			const rect = features.getBoundingClientRect();
-			const inFeatures = rect.top <= line && rect.bottom > line;
-			featuresLink.classList.toggle('active', inFeatures);
-			homeLink.classList.toggle('active', !inFeatures);
+			// 判斷線要低於 section 的 scroll-margin-top（80px），否則點錨點跳過去後區塊頂端碰不到線
+			const line = Math.max(120, window.innerHeight * 0.3);
+			const current = spies.find(({ section }) => {
+				const rect = section.getBoundingClientRect();
+				return rect.top <= line && rect.bottom > line;
+			});
+			spies.forEach(({ link }) => link.classList.toggle('active', link === current?.link));
+			homeLink.classList.toggle('active', !current);
 		};
 		const onScroll = () => {
 			if (!ticking) {
@@ -73,6 +78,7 @@ const links = [
 			}
 		};
 		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll);
 		window.addEventListener('hashchange', update);
 		update();
 	}
