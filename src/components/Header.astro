@@ -49,6 +49,33 @@ const links = [
 			toggle?.setAttribute('aria-expanded', 'false');
 		}),
 	);
+
+	// 首頁的「功能」是錨點（/#features），build 時只看得到路徑 "/"，
+	// 所以改在瀏覽器依捲動位置判斷：畫面停在 #features 區塊時亮「功能」，否則亮「首頁」
+	const features = document.getElementById('features');
+	const homeLink = header?.querySelector<HTMLAnchorElement>('.links a[href="/"]');
+	const featuresLink = header?.querySelector<HTMLAnchorElement>('.links a[href="/#features"]');
+	if (location.pathname === '/' && features && homeLink && featuresLink) {
+		let ticking = false;
+		const update = () => {
+			ticking = false;
+			// 以 header 下緣為基準線，基準線落在區塊內就算「在功能區」
+			const line = (header?.getBoundingClientRect().bottom ?? 0) + 1;
+			const rect = features.getBoundingClientRect();
+			const inFeatures = rect.top <= line && rect.bottom > line;
+			featuresLink.classList.toggle('active', inFeatures);
+			homeLink.classList.toggle('active', !inFeatures);
+		};
+		const onScroll = () => {
+			if (!ticking) {
+				ticking = true;
+				requestAnimationFrame(update);
+			}
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('hashchange', update);
+		update();
+	}
 </script>
 
 <style>
