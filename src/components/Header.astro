@@ -3,12 +3,13 @@ import HeaderLink from './HeaderLink.astro';
 
 const links = [
 	{ href: '/', label: '首頁' },
-	{ href: '/#features', label: '功能' },
-	{ href: '/blog', label: '文章' },
+	// spy：對應首頁區塊的 id，捲到該區塊時這個選項會亮
+	{ href: '/#features', label: '功能', spy: 'features' },
+	{ href: '/blog', label: '文章', spy: 'latest' },
 	// 價格、FAQ 先跳到首頁的精簡版區塊，區塊底下再連到獨立頁；
 	// activePath：在獨立頁（/pricing、/faq）時，這個選項仍要亮
-	{ href: '/#pricing', label: '價格', activePath: '/pricing' },
-	{ href: '/#faq', label: 'FAQ', activePath: '/faq' },
+	{ href: '/#pricing', label: '價格', activePath: '/pricing', spy: 'pricing' },
+	{ href: '/#faq', label: 'FAQ', activePath: '/faq', spy: 'faq' },
 	{ href: '/about', label: '關於' },
 ];
 ---
@@ -26,7 +27,7 @@ const links = [
 
 		<div class="menu" id="site-menu">
 			<div class="links">
-				{links.map((l) => <HeaderLink href={l.href} activePath={l.activePath}>{l.label}</HeaderLink>)}
+				{links.map((l) => <HeaderLink href={l.href} activePath={l.activePath} data-spy={l.spy}>{l.label}</HeaderLink>)}
 			</div>
 			<a href="https://subfit.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary app-cta">
 				免費試用
@@ -52,11 +53,11 @@ const links = [
 		}),
 	);
 
-	// 首頁的「功能／價格／FAQ」是錨點（/#features 等），build 時只看得到路徑 "/"，
+	// 首頁的「功能／文章／價格／FAQ」對應首頁區塊（data-spy），build 時只看得到路徑 "/"，
 	// 所以改在瀏覽器依捲動位置判斷：判斷線落在哪個區塊就亮哪個，都不在就亮「首頁」
 	const homeLink = header?.querySelector<HTMLAnchorElement>('.links a[href="/"]');
-	const spies = Array.from(header?.querySelectorAll<HTMLAnchorElement>('.links a[href^="/#"]') ?? [])
-		.map((link) => ({ link, section: document.getElementById(link.hash.slice(1)) }))
+	const spies = Array.from(header?.querySelectorAll<HTMLAnchorElement>('.links a[data-spy]') ?? [])
+		.map((link) => ({ link, section: document.getElementById(link.dataset.spy!) }))
 		.filter((s): s is { link: HTMLAnchorElement; section: HTMLElement } => s.section !== null);
 	if (location.pathname === '/' && homeLink && spies.length > 0) {
 		let ticking = false;
