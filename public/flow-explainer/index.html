@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="用一支示範手機跑過 SubFit 的一堂課：暖身、逐句精練每一關、七個練法模板，以及怎麼自己排練法。">
+<title>SubFit 練法解說</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600&family=Noto+Sans+TC:wght@400;500;700&family=Plus+Jakarta+Sans:wght@700;800&family=Rubik:wght@400;600;800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Layout: a 390×844 phone mock (scaled) on the left plays the demo and a flow strip under it mirrors the current 練法;
+   the right column carries narration, chapter list and transport controls. One column under 760px.
+   Inside the phone every size is the App's own Tailwind value (px-4 = 16px …) so the screens match SubFit 1.1.2. */
+:root{
+  --bg:#f3ede4; --surface:#ffffff; --fg:#1d1b16; --muted:#857462; --line:#d7c3ae;
+  --accent:#835400; --on-accent:#ffffff; --hot:#f9a825; --chip:#faf6ef; --chip-fg:#5c4a2e;
+  --font-display:'Space Grotesk','Noto Sans TC',sans-serif;
+  --font-ui:'Rubik','Noto Sans TC',system-ui,sans-serif;
+  --font-zh:'Noto Sans TC','Rubik',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1324; --surface:#141d31; --fg:#f1f5f9; --muted:#97a3b8; --line:rgba(255,255,255,.12);
+    --accent:#facc15; --on-accent:#0f172a; --hot:#facc15; --chip:#1b2640; --chip-fg:#e2e8f0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1324; --surface:#141d31; --fg:#f1f5f9; --muted:#97a3b8; --line:rgba(255,255,255,.12);
+  --accent:#facc15; --on-accent:#0f172a; --hot:#facc15; --chip:#1b2640; --chip-fg:#e2e8f0; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;padding-block:28px 48px;padding-inline:16px;background:var(--bg);color:var(--fg);font-family:var(--font-zh);line-height:1.6;-webkit-font-smoothing:antialiased}
+:focus-visible{outline:2px solid var(--hot);outline-offset:2px}
+.wrap{max-width:1000px;margin:0 auto}
+.hd{display:flex;flex-direction:column;gap:6px;margin-bottom:22px}
+.eyebrow{font-family:var(--font-ui);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--font-display);font-size:clamp(26px,4vw,38px);line-height:1.15;margin:0;color:var(--accent);text-wrap:balance;letter-spacing:-.01em}
+.lede{margin:0;max-width:60ch;color:var(--muted);font-size:15px}
+.player{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:760px){.player{grid-template-columns:1fr;gap:18px}}
+
+/* ── 舞台 ─────────────────────────────────────────── */
+.stage{display:flex;flex-direction:column;align-items:center;gap:14px;min-width:0}
+.phone-wrap{width:100%;display:flex;justify-content:center;height:calc(856px * var(--s,1))}
+.phone{width:390px;height:844px;border-radius:52px;background:#0f172a;border:6px solid #1f2937;box-shadow:0 30px 60px -20px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);overflow:hidden;position:relative;transform-origin:top center;transform:scale(var(--s,1));flex:none}
+.app{position:absolute;inset:0;font-family:'Be Vietnam Pro','Noto Sans TC',system-ui,sans-serif;color:#fff;line-height:1.5;--sat:47px}
+.status{position:absolute;top:0;left:0;right:0;height:var(--sat);z-index:30;display:flex;align-items:center;justify-content:space-between;padding:0 32px;font-size:15px;font-weight:600;pointer-events:none}
+.island{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:120px;height:36px;border-radius:20px;background:#000}
+.batt{width:26px;height:12px;border:1.5px solid rgba(255,255,255,.7);border-radius:4px;position:relative}
+.batt::after{content:"";position:absolute;inset:2px;right:5px;background:#fff;border-radius:1px}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .35s ease,background .7s ease;background:#0f172a}
+.scr.on{opacity:1}
+.ptr{position:absolute;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.35);border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.45);transform:translate(-50%,-50%);transition:left .55s cubic-bezier(.16,1,.3,1),top .55s cubic-bezier(.16,1,.3,1),transform .15s,opacity .3s;pointer-events:none;z-index:50;opacity:0;left:195px;top:500px}
+.ptr.show{opacity:1}
+.ptr.down{transform:translate(-50%,-50%) scale(.72);background:rgba(250,204,21,.8)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes popin{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes twpulse{50%{opacity:.5}}
+@keyframes pulsered{0%{box-shadow:0 0 0 0 rgba(239,68,68,.7)}70%{box-shadow:0 0 0 18px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.pop{animation:popin .3s cubic-bezier(.16,1,.3,1) forwards}
+.ts{text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.paused .app *{animation-play-state:paused !important}
+
+/* TopBar（XP + 書籤 + ✕）*/
+.topbar{position:absolute;top:0;left:0;right:0;padding:var(--sat) 16px 16px;display:flex;justify-content:space-between;align-items:flex-start;z-index:20}
+.xp{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.lv{background:#eab308;color:#000;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;padding:4px 8px;border-radius:4px;box-shadow:0 10px 15px -3px rgba(0,0,0,.3);transform:rotate(-5deg);display:inline-block;-webkit-text-stroke:.5px #000;line-height:1.4}
+.xpbar{width:128px;height:12px;background:rgba(0,0,0,.5);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.xpbar i{display:block;height:100%;background:linear-gradient(to right,#facc15,#f97316)}
+.xpt{font-size:10px;font-weight:700;color:rgba(255,255,255,.5)}
+.tb-r{display:flex;gap:8px}
+.tb-btn{width:44px;height:44px;border-radius:8px;background:rgba(0,0,0,.4);display:grid;place-items:center;color:#fff}
+.tb-btn.star{color:rgba(255,255,255,.4)}
+
+/* 課程準備頁 */
+#scr-prep{background:linear-gradient(to bottom right,#1e1b4b,#0f172a)}
+.prep-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 24px}
+.prep-hero{text-align:center;margin-bottom:32px}
+.prep-hero .tgt{color:#fbbf24;margin-bottom:20px;display:flex;justify-content:center;animation:float 3s ease-in-out infinite}
+.prep-hero h2{margin:0 0 16px;font-size:30px;font-weight:900;line-height:1.2}
+.prep-hero p{margin:0;font-size:14px;color:rgba(255,255,255,.4);line-height:1.6}
+.steps{width:100%;max-width:320px;display:flex;flex-direction:column;gap:16px}
+.step{display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(6px);transition:opacity .45s,transform .45s}
+.step.in{opacity:1;transform:none}
+.step .num{width:20px;height:20px;border-radius:50%;background:rgba(99,102,241,.3);color:rgba(165,180,252,.6);font-size:10px;font-weight:900;display:grid;place-items:center;flex:none;margin-top:2px}
+.step .lab{font-size:14px;font-weight:700;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:6px}
+.step .more{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);margin-top:6px;display:inline-block}
+.step .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;opacity:0;transition:opacity .2s}
+.step .chips.in{opacity:1}
+.chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:rgba(255,255,255,.35);display:inline-flex;align-items:center;gap:4px}
+.prep-foot{padding:8px 24px 28px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.cta{width:100%;max-width:320px;padding:16px;border-radius:24px;font-weight:900;font-size:14px;text-transform:uppercase;letter-spacing:.15em;background:#f59e0b;color:#0f172a;text-align:center;animation:breathe 2.5s ease-in-out infinite}
+.quote{font-size:12px;font-style:italic;color:rgba(199,210,254,.4);text-align:center;line-height:1.6;margin:0}
+
+/* 批次暖身頁 */
+.bt-head{padding:calc(4rem + var(--sat)) 16px 16px;display:flex;justify-content:center}
+.lbl9{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:#eab308}
+.bt-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center}
+.icon80{color:rgba(255,255,255,.7);filter:drop-shadow(0 4px 3px rgba(0,0,0,.25))}
+.pill-xl{margin-top:24px;font-size:20px;font-weight:700;padding:8px 24px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(0,0,0,.3);color:rgba(255,255,255,.5)}
+.sub-zh{min-height:60px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:#facc15;text-shadow:0 3px 0 rgba(0,0,0,.3);line-height:1.6}
+.prog{margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.prog .n{font-size:14px;font-weight:700;color:rgba(255,255,255,.5)}
+.prog .bar{width:192px;height:8px;border-radius:999px;background:rgba(255,255,255,.1);overflow:hidden}
+.prog .bar i{display:block;height:100%;border-radius:999px;background:#fbbf24;transition:width .5s}
+.desc{margin-top:24px;font-size:12px;font-weight:700;font-style:italic;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.4);animation:twpulse 2s cubic-bezier(.4,0,.6,1) infinite}
+.bt-foot{padding:16px 16px 48px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.pills{display:flex;align-items:center;gap:12px}
+.pillg{background:rgba(255,255,255,.1);padding:4px;border-radius:999px;display:flex;gap:4px}
+.pillg span{padding:10px 12px;border-radius:999px;font-size:12px;font-weight:700;color:rgba(255,255,255,.4);line-height:1.3}
+.pillg span.on{background:#f59e0b;color:#0f172a;box-shadow:0 4px 6px -1px rgba(0,0,0,.1)}
+.pillg.sm span{padding:6px 12px}
+.pillg.y span.on{background:#facc15}
+.skip{padding:12px 32px;border-radius:16px;font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+
+/* 逐句訓練頁 */
+.tr-head{padding:calc(5rem + var(--sat)) 16px 16px;display:flex;flex-direction:column;align-items:center;position:relative;z-index:10}
+.rep{display:flex;align-items:center;gap:8px;margin-bottom:8px;background:rgba(255,255,255,.05);padding:4px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.05)}
+.rep .s{font-size:10px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.2em}
+.rep .d{width:1px;height:12px;background:rgba(255,255,255,.1)}
+.rep .c{font-size:12px;font-weight:900;color:#facc15;display:flex;align-items:center;gap:4px}
+.segs{display:flex;gap:4px;width:100%;max-width:384px;height:6px;margin-bottom:16px}
+.segs i{flex:1;border-radius:2px;background:rgba(255,255,255,.1);transition:all .3s}
+.segs i.on{background:#facc15;box-shadow:0 0 10px rgba(250,204,21,.5)}
+.circles{display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap;max-width:448px}
+.circles span{width:32px;height:32px;border-radius:50%;font-size:12px;font-weight:900;display:grid;place-items:center;background:rgba(255,255,255,.1);color:rgba(255,255,255,.3)}
+.circles span.cur{background:#facc15;color:#000;transform:scale(1.1);box-shadow:0 10px 15px -3px rgba(0,0,0,.3)}
+.circles span.done{background:rgba(34,197,94,.2);color:#4ade80}
+.phase{font-size:9px;font-weight:700;text-transform:uppercase;margin-top:24px;color:#eab308}
+.tr-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;position:relative;z-index:10;width:100%;overflow:hidden}
+.tr-main.rev{justify-content:flex-start}
+.tr-inner{width:100%;display:flex;flex-direction:column;align-items:center;margin:auto 0}
+.tr-desc{margin-top:12px;height:24px;display:flex;justify-content:center;align-items:center;width:100%}
+.tr-desc p{margin:0;font-size:12px;font-weight:700;font-style:italic;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,.4);max-width:320px;line-height:1.6;animation:twpulse 2s cubic-bezier(.4,0,.6,1) infinite}
+.c300{min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;padding:0 16px}
+.big{font-size:30px;font-weight:900;line-height:1.25;text-align:center}
+.zh2{font-size:24px;font-weight:700;line-height:1.25;color:#facc15;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.box64{min-height:64px;display:flex;align-items:center;justify-content:center;margin-top:24px;width:100%}
+.btn-sm{border:1px solid rgba(255,255,255,.2);padding:8px 24px;border-radius:12px;font-size:14px;font-weight:700;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.btn-lg{display:inline-block;margin-top:32px;border:1px solid rgba(255,255,255,.2);padding:16px 32px;border-radius:999px;font-size:18px;font-weight:700;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.hint12{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3)}
+.ghost{color:rgba(255,255,255,.08);filter:blur(6px);text-shadow:none;transition:filter .4s,color .4s}
+.ghost.rv{color:inherit;filter:blur(0)}
+.rec-wrap{display:flex;flex-direction:column;align-items:center;width:100%;min-height:250px;justify-content:flex-start}
+.h6{height:24px}
+.h9{height:36px;display:flex;align-items:center;justify-content:center;width:100%}
+.rec-sen{font-size:16px;font-weight:700;color:rgba(255,255,255,.5);line-height:1.6;transition:all .3s;padding:0 8px}
+.h12{height:48px;display:flex;align-items:center;justify-content:center;width:100%;flex-direction:column}
+.micb{margin-top:16px;width:112px;height:112px;border-radius:50%;border:4px solid #64748b;background:#334155;display:grid;place-items:center;color:rgba(255,255,255,.5);transition:background .3s,border-color .3s;flex:none}
+.micb.rec{background:#dc2626;border-color:#f87171;color:#fca5a5;animation:pulsered 1.5s infinite}
+.status12{font-size:12px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.3)}
+.acts{display:flex;gap:10px;height:40px;visibility:hidden}
+.acts.on{visibility:visible}
+.acts span{min-width:120px;padding:8px 20px;border-radius:999px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
+.acts .mine{background:#4f46e5}.acts .cmp{background:#d97706}
+.brain{color:rgba(255,255,255,.8);filter:drop-shadow(0 4px 3px rgba(0,0,0,.25))}
+.peek{margin-top:16px;font-weight:700;color:rgba(255,255,255,.4)}
+.dashed{width:100%;max-width:576px;padding:48px 32px;border-radius:40px;border:4px dashed rgba(255,255,255,.1);background:rgba(255,255,255,.05);text-align:center}
+.dashed span{font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:.2em;font-style:italic;color:rgba(250,204,21,.5)}
+.sticky-rv{padding:16px 24px;border-bottom:1px solid rgba(255,255,255,.05);position:relative;z-index:40;display:none}
+.sticky-rv.on{display:block}
+.sticky-rv .row2{display:flex;align-items:center;justify-content:center;gap:12px}
+.sticky-rv .en{font-size:24px;font-weight:900;line-height:1.25;text-shadow:0 3px 0 rgba(0,0,0,.3);text-align:center}
+.sticky-rv .spk{width:44px;height:44px;border-radius:50%;background:rgba(234,179,8,.2);color:#facc15;display:grid;place-items:center;flex:none}
+.sticky-rv .zh{margin-top:8px;font-size:14px;color:rgba(255,255,255,.5);text-align:center}
+.explain-btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:999px;border:1px solid rgba(250,204,21,.5);background:rgba(250,204,21,.1);color:#fde047;font-weight:700;font-size:16px}
+.faded{opacity:.15;font-size:36px;font-weight:700;filter:blur(1px);text-align:center;line-height:1.3}
+.note{position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:20;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);border:1px solid rgba(255,255,255,.1);white-space:nowrap}
+.cloze .blank{display:inline-block;border-bottom:4px solid rgba(255,255,255,.5);color:transparent;margin:0 4px;min-width:2.5ch;vertical-align:baseline;transition:color .3s}
+.cloze .blank.rv{color:#facc15;border-color:transparent}
+.wl{margin-top:32px;display:flex;flex-direction:column;gap:8px;width:100%;max-width:448px}
+.wl div{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:12px;padding:10px 16px;background:rgba(255,255,255,.1);text-align:left}
+.wl .m{font-size:14px;color:rgba(255,255,255,.8)}
+.wl .pos{margin-left:8px;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5)}
+.wl .a{font-size:14px;font-weight:900;color:rgba(255,255,255,.25);white-space:nowrap}
+.wl .a.rv{color:#facc15}
+.tr-foot{padding:16px 16px 40px;display:flex;flex-direction:column;align-items:center;gap:24px;margin-top:auto;position:relative;z-index:10}
+.nav{display:flex;align-items:center;gap:24px}
+.prev{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:rgba(255,255,255,.3)}
+.prev.hide{opacity:0}
+.replay{width:96px;height:96px;border-radius:24px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);display:grid;place-items:center;color:#fff;box-shadow:0 25px 50px -12px rgba(0,0,0,.25)}
+.nextb{width:80px;height:80px;border-radius:24px;background:#facc15;border-top:1px solid rgba(255,255,255,.2);display:grid;place-items:center;color:#fff;box-shadow:0 4px 6px -1px rgba(0,0,0,.1);transition:all .3s}
+.nextb.dim{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);opacity:.4}
+.col{display:flex;flex-direction:column;align-items:center;gap:4px}
+.col small{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;visibility:hidden}
+.rate{width:100%;max-width:384px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rate div{padding:20px 8px;border-radius:16px;border:1px solid;font-size:14px;font-weight:700;text-align:center;transition:transform .2s,filter .2s}
+.rate div small{display:block;font-size:12px;font-weight:400;opacity:.6;margin-top:4px}
+.rate .r1{background:rgba(239,68,68,.2);color:#f87171;border-color:rgba(239,68,68,.3)}
+.rate .r2{background:rgba(249,115,22,.2);color:#fb923c;border-color:rgba(249,115,22,.3)}
+.rate .r3{background:rgba(34,197,94,.2);color:#4ade80;border-color:rgba(34,197,94,.3)}
+.rate .r4{background:rgba(59,130,246,.2);color:#60a5fa;border-color:rgba(59,130,246,.3)}
+.rate div.pick{transform:scale(.95);filter:brightness(1.5)}
+
+/* 練法設定頁 */
+#scr-flow{background:#0f172a}
+.fl-head{position:relative;z-index:10;background:rgba(15,23,42,.9);padding:var(--sat) 20px 16px;display:flex;align-items:center;justify-content:space-between;flex:none}
+.fl-back{display:flex;align-items:center;gap:4px;color:#fbbf24;font-weight:600;font-size:14px}
+.fl-title{position:absolute;left:50%;transform:translateX(-50%);font-size:18px;font-weight:900;bottom:16px}
+.fl-save{font-size:14px;font-weight:700;padding:6px 16px;border-radius:999px;background:rgba(251,191,36,.18);color:#fbbf24;border:1px solid rgba(251,191,36,.35)}
+.fl-view{flex:1;overflow:hidden;position:relative}
+.fl-body{position:relative;padding:16px 20px 48px;display:flex;flex-direction:column;gap:32px;transition:transform .6s cubic-bezier(.16,1,.3,1);will-change:transform}
+.fsec h3{margin:0 0 16px;font-size:20px;font-weight:700;color:rgba(255,255,255,.8)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;background:rgba(131,84,0,.14);border:1px solid rgba(131,84,0,.2);transition:all .25s}
+.card.act{background:rgba(251,191,36,.18);border:2px solid rgba(251,191,36,.55);padding:11px 13px}
+.card .rd{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,.3);display:grid;place-items:center;flex:none}
+.card.act .rd{border-color:#fbbf24}
+.card.act .rd::after{content:"";width:8px;height:8px;border-radius:50%;background:#fbbf24}
+.card .nm{flex:1;font-size:14px;font-weight:700;color:rgba(255,255,255,.8);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+.card.act .nm{color:#fcd34d}
+.card .inf{opacity:.35;color:rgba(255,255,255,.7);display:flex}
+.divider{height:1px;background:rgba(255,255,255,.08);margin:-8px 0}
+.rows{border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);overflow:hidden}
+.row{border-bottom:1px solid rgba(255,255,255,.08);position:relative;transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .2s}
+.row:last-child{border-bottom:0}
+.row.off{opacity:.5}
+.row .in{display:flex;align-items:center;gap:12px;padding:14px 16px;transition:all .25s}
+.row .grip{width:28px;flex:none;display:flex;justify-content:center;color:rgba(255,255,255,.3)}
+.row .ic{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:none;opacity:.8}
+.row .tx{flex:1;min-width:0}
+.row .tx b{display:block;font-size:15px;font-weight:700;line-height:1.25}
+.row .tx small{display:block;font-size:12px;opacity:.5;margin-top:2px;line-height:1.4}
+.tog{width:44px;height:24px;border-radius:999px;background:rgba(255,255,255,.2);position:relative;flex:none;transition:background .3s}
+.tog::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:left .3s}
+.tog.on{background:#f59e0b}
+.tog.on::after{left:22px}
+.inl{padding:0 16px 14px 104px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.inl .lb{font-size:12px;color:rgba(255,255,255,.4);flex:none}
+.inl .g{display:flex;border-radius:999px;padding:2px;gap:2px;background:rgba(255,255,255,.08)}
+.inl .g span{padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;color:rgba(255,255,255,.45);white-space:nowrap}
+.inl .g span.on{background:#f59e0b;color:#1e293b}
+.row.lift{z-index:5;background:rgba(251,191,36,.25);border:2px solid rgba(251,191,36,.7);border-radius:16px;box-shadow:0 0 32px rgba(251,191,36,.2);transform:scale(1.05)}
+.navrow{display:flex;align-items:center;gap:12px;padding:14px 16px;opacity:.45;border-top:1px solid rgba(255,255,255,.08)}
+.navrow .grip{width:28px;flex:none;display:flex;justify-content:center;color:rgba(255,255,255,.35)}
+.navrow span{font-size:15px;font-weight:700;color:rgba(255,255,255,.35)}
+
+/* 練法長條 */
+.strip-cap{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-family:var(--font-ui);font-weight:600;text-align:center}
+.strip{width:100%;max-width:380px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;min-height:34px}
+.sc{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:var(--chip);color:var(--chip-fg);font-size:12px;font-weight:600;border:1px solid var(--line);animation:pop .35s cubic-bezier(.16,1,.3,1)}
+.sc.warm{background:transparent;border-style:dashed}
+.sc svg{color:var(--accent)}
+.arrow{color:var(--muted);font-size:14px;font-family:var(--font-ui);padding:0 2px}
+.sc.none{border-style:dashed;color:var(--muted);font-weight:400;background:transparent}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+
+/* ── 右欄 ─────────────────────────────────────────── */
+.side{display:flex;flex-direction:column;gap:16px;min-width:0}
+.cap{min-height:132px;padding:18px 20px;border-radius:18px;background:var(--surface);border:1px solid var(--line);font-size:16px;line-height:1.75;transition:opacity .22s}
+.cap.fade{opacity:0}
+.cap b{color:var(--accent);font-weight:700}
+.cap .tag{display:block;font-family:var(--font-ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;font-weight:600}
+.ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctl button{height:40px;min-width:40px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-family:var(--font-zh);font-size:13px;padding:0 12px}
+.ctl button:disabled{opacity:.4;cursor:default}
+.ctl button.play{background:var(--accent);color:var(--on-accent);border-color:transparent;min-width:100px;font-weight:700}
+.chaps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.chaps li{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:12px;cursor:pointer;font-size:14px;color:var(--muted);border:1px solid transparent;user-select:none}
+.chaps li .k{font-family:var(--font-ui);font-size:12px;font-weight:600;width:22px;color:var(--muted);font-variant-numeric:tabular-nums}
+.chaps li.cur{color:var(--fg);background:var(--surface);border-color:var(--line)}
+.chaps li.cur .k,.chaps li.done .k{color:var(--accent)}
+.chaps li .bar{margin-left:auto;width:56px;height:4px;border-radius:2px;background:var(--line);overflow:hidden;flex:none}
+.chaps li .bar i{display:block;height:100%;width:0;background:var(--accent)}
+.pg{display:none;flex-direction:column;gap:12px;padding:16px;border-radius:18px;background:var(--surface);border:1px solid var(--line)}
+.pg.on{display:flex}
+.pg h4{margin:0;font-size:12px;font-family:var(--font-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.tg{display:flex;flex-wrap:wrap;gap:6px}
+.tg-b{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);font:600 13px var(--font-zh);cursor:pointer}
+.tg-b.on{background:var(--chip);color:var(--fg);border-color:var(--accent)}
+.tg-b.on svg{color:var(--accent)}
+.pl{display:flex;flex-direction:column;gap:4px}
+.pr{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:10px;border:1px solid var(--line);font-size:13px;min-width:0}
+.pr.off{opacity:.5}
+.pr .mv{display:flex;gap:2px;width:52px;flex:none}
+.pr .mv button{width:24px;height:24px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--fg);display:grid;place-items:center;cursor:pointer;padding:0}
+.pr .mv button:disabled{opacity:.3;cursor:default}
+.pr .pi{color:var(--accent);display:flex}
+.pr .pn{font-weight:700;min-width:60px}
+.pr .pd{flex:1;min-width:0;font-size:12px;color:var(--muted);line-height:1.35}
+.sw{width:40px;height:24px;border-radius:12px;background:var(--line);position:relative;flex:none;transition:background .3s;padding:0;border:0;cursor:pointer}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);transition:transform .3s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw.on{background:var(--accent)}
+.sw.on::after{transform:translateX(16px)}
+.pg .note2{font-size:12px;color:var(--muted);min-height:18px}
+.foot{margin-top:28px;font-size:12px;color:var(--muted);text-align:center}
+/* ── 嵌入 blog（?embed）：拿掉頁首頁尾、改用 blog 的奶油色與橘色 ── */
+html.embed{--bg:#fef7e9;--surface:#fffdf8;--fg:#1f1a17;--muted:#78685c;--line:rgba(31,26,23,.12);--accent:#c9550f;--on-accent:#ffffff;--hot:#eb6919;--chip:#fbeed3;--chip-fg:#5a3a1a;color-scheme:light}
+html.embed body{padding-block:8px 16px}
+html.embed .hd,html.embed .foot{display:none}
+/* ── 錄影模式（?video=land / port）：固定畫布、無控制列、大字幕，前後接片頭片尾卡 ── */
+html.video body{padding:0;overflow:hidden;width:100vw;height:100vh}
+html.video .wrap{max-width:none;height:100%}
+html.video .hd,html.video .ctl,html.video .chaps,html.video .pg,html.video .foot,html.video .strip-cap{display:none}
+html.video .cap{font-size:30px;line-height:1.7;padding:32px 36px;border-radius:28px;min-height:0}
+html.video .cap .tag{font-size:16px;margin-bottom:12px}
+html.video-land .player{grid-template-columns:560px minmax(0,1fr);gap:72px;height:100%;align-items:center;padding:0 96px}
+html.video-land .stage{gap:20px}
+html.video-land .strip{max-width:560px}
+html.video-land .sc{font-size:16px;padding:7px 14px}
+html.video-port .player{grid-template-columns:1fr;gap:28px;height:100%;align-content:center;padding:0 72px}
+html.video-port .stage{gap:18px}
+html.video-port .strip{max-width:100%}
+html.video-port .sc{font-size:18px;padding:8px 16px}
+html.video-port .cap{font-size:34px;min-height:250px}
+.card-full{position:fixed;inset:0;z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:var(--bg);color:var(--fg);text-align:center;padding:48px}
+.card-full.on{display:flex}
+.card-full .eyebrow{font-size:20px}
+.card-full h2{font-family:var(--font-display);font-size:72px;margin:0;color:var(--accent);line-height:1.15;text-wrap:balance}
+.card-full p{font-size:28px;color:var(--muted);margin:0;max-width:26ch;line-height:1.6}
+html.video-port .card-full h2{font-size:84px}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="hd">
+    <div class="eyebrow">SubFit · 練法</div>
+    <h1>一堂課怎麼跑，你說了算</h1>
+    <p class="lede">暖身要不要、逐句練哪幾關、順序怎麼排，都在「練法設定」裡決定。看完這段，再自己排一次。</p>
+  </header>
+
+  <main class="player">
+    <section class="stage" aria-label="示範畫面">
+      <div class="phone-wrap" id="phone-wrap">
+        <div class="phone" id="phone" aria-hidden="true">
+          <div class="app" id="app">
+            <div class="status"><span>9:41</span><i class="island"></i><span class="batt"></span></div>
+
+            <!-- 課程準備頁（CoursePrepView） -->
+            <div class="scr" id="scr-prep">
+              <div id="tb-prep"></div>
+              <main class="prep-main">
+                <div class="prep-hero"><div class="tgt" id="tgt"></div><h2>Start Session</h2><p id="prep-meta"></p></div>
+                <div class="steps" id="steps"></div>
+              </main>
+              <footer class="prep-foot"><div class="cta">開始訓練</div><p class="quote">「開始了再說完美的事。」</p></footer>
+            </div>
+
+            <!-- 批次暖身頁（BatchPhaseView） -->
+            <div class="scr" id="scr-batch">
+              <div id="tb-batch"></div>
+              <header class="bt-head"><span class="lbl9" id="bt-lbl">Batch Listen</span></header>
+              <main class="bt-main" id="bt-main"></main>
+              <footer class="bt-foot">
+                <div class="pills"><div class="pillg"><span>0.5x</span><span>0.75x</span><span class="on">1x</span></div><div class="pillg sm"><span class="on">原音</span><span>AI</span></div></div>
+                <div class="skip">跳過 →</div>
+              </footer>
+            </div>
+
+            <!-- 逐句訓練頁（TrainingView） -->
+            <div class="scr" id="scr-train">
+              <div id="tb-train"></div>
+              <header class="tr-head" id="tr-head"></header>
+              <div class="sticky-rv" id="tr-sticky"></div>
+              <main class="tr-main" id="tr-main"></main>
+              <footer class="tr-foot" id="tr-foot"></footer>
+            </div>
+
+            <!-- 練法設定頁（FlowConfigSubView） -->
+            <div class="scr" id="scr-flow">
+              <header class="fl-head"><span class="fl-back" id="fl-back"></span><span class="fl-title">練法設定</span><span class="fl-save" id="fl-save">儲存</span></header>
+              <div class="fl-view" id="fl-view">
+                <div class="fl-body" id="fl-body">
+                  <section class="fsec" id="fs-cards"><h3>預設模板</h3><div class="cards" id="fl-cards"></div></section>
+                  <div class="divider"></div>
+                  <section class="fsec" id="fs-warm"><h3>批次暖身</h3><div class="rows" id="fl-warm"></div></section>
+                  <section class="fsec" id="fs-list"><h3>逐句訓練</h3><div class="rows" id="fl-list"></div></section>
+                </div>
+              </div>
+            </div>
+
+            <div class="ptr" id="cur"></div>
+          </div>
+        </div>
+      </div>
+      <div class="strip-cap">目前的練法</div>
+      <div class="strip" id="strip" aria-live="polite"></div>
+    </section>
+
+    <aside class="side">
+      <div class="cap" id="cap" aria-live="polite"></div>
+      <div class="ctl">
+        <button type="button" id="b-prev" aria-label="上一章"></button>
+        <button type="button" id="b-play" class="play"></button>
+        <button type="button" id="b-next" aria-label="下一章"></button>
+        <button type="button" id="b-replay">從頭播放</button>
+      </div>
+      <ol class="chaps" id="chaps"></ol>
+      <div class="pg" id="pg">
+        <h4>批次暖身</h4>
+        <div class="tg" id="pg-blocks"></div>
+        <h4>逐句訓練（上下箭頭換順序）</h4>
+        <div class="pl" id="pg-list"></div>
+        <div class="note2" id="pg-note"></div>
+      </div>
+    </aside>
+  </main>
+  <p class="foot">畫面依 SubFit 1.1.2 的課程準備頁、暖身頁、逐句訓練頁與練法設定頁重繪。實際 App 內可拖曳排序，這裡用箭頭代替。</p>
+</div>
+<div class="card-full" id="card-intro"><div class="eyebrow">SubFit · 練法</div><h2>一堂課怎麼跑，你說了算</h2><p>暖身要不要、逐句練哪幾關、順序怎麼排，都由你決定</p></div>
+<div class="card-full" id="card-end"><div class="eyebrow">SubFit</div><h2>打開 App，進「練法設定」</h2><p>subfit.app · 100LS 跟讀練習工具</p></div>
+
+<script>
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+
+/* ── 顯示模式：一般 / 嵌入 blog（?embed 或 #embed）/ 錄影（?video=land|port 或 #video-land） ── */
+const qs=new URLSearchParams(location.search), hash=location.hash.replace('#','');
+const MODE={embed:qs.has('embed')||hash==='embed', video:qs.get('video')||(hash==='video-land'?'land':hash==='video-port'?'port':null)};
+const root=document.documentElement;
+if(MODE.embed){ root.classList.add('embed'); root.setAttribute('data-theme','light'); }
+if(MODE.video){ root.classList.add('video','video-'+MODE.video); root.setAttribute('data-theme','light'); }
+if(MODE.embed){
+  // 回報高度給外層 iframe（blog 的 FlowExplainer.astro 會接），手機與桌面都不會多出捲軸
+  const post=()=>{ try{ parent.postMessage({type:'subfit-explainer-height',height:document.documentElement.scrollHeight},'*'); }catch(e){} };
+  if(typeof ResizeObserver!=='undefined') new ResizeObserver(post).observe(document.body);
+  addEventListener('load',post);
+}
+
+/* ── 圖示（Lucide 線條，內嵌） ── */
+const ICONS={
+  headphones:'<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/>',
+  eye:'<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  book:'<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>',
+  volume:'<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>',
+  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
+  shield:'<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>',
+  brain:'<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/><path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/><path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/><path d="M3.477 10.896a4 4 0 0 1 .585-.396"/><path d="M19.938 10.5a4 4 0 0 1 .585.396"/><path d="M6 18a4 4 0 0 1-1.967-.516"/><path d="M19.967 17.484A4 4 0 0 1 18 18"/>',
+  rotateccw:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',
+  rotatecw:'<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>',
+  pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  bulb:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>',
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  play:'<polygon points="6 3 20 12 6 21 6 3"/>',
+  pause:'<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>',
+  chevl:'<path d="m15 18-6-6 6-6"/>',
+  chevr:'<path d="m9 18 6-6-6-6"/>',
+  grip:'<circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>',
+  up:'<path d="m18 15-6-6-6 6"/>',
+  down:'<path d="m6 9 6 6 6-6"/>',
+  star:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  ear:'<path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/>',
+  note:'<path d="M16 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V9Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  lock:'<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
+  arrows:'<path d="M18 8L22 12L18 16"/><path d="M6 16L2 12L6 8"/><line x1="2" y1="12" x2="22" y2="12"/>',
+};
+const ic=(n,s=14,sw=2,fill='none')=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+
+/* ── 資料：與 App 的 flowPresets.js / trainingStates.js 對齊 ── */
+const PH={
+  PURE_LISTEN:{label:'純聽',chip:'純聽',icon:'headphones',chipIcon:'headphones',name:'Phase 1: Deep Listen',bg:'#0f172a',desc:'閉上眼，感知聲音的肌肉線條',descFocus:'閉上眼，專注聆聽聲音與語調。',secs:5},
+  READ_LISTEN:{label:'看聽',chip:'看聽',icon:'eye',chipIcon:'book',name:'Phase 2: Sync Vision',bg:'#1e3a8a',desc:'視覺校準：將文字與聲音同步',descFocus:'文字聲音對齊，點擊下方可看譯文。',secs:6},
+  SHADOWING:{label:'跟讀',chip:'跟讀',icon:'volume',chipIcon:'volume',name:'Phase 3: Shadow Drill',bg:'#164e63',desc:'看中文回想英文，點擊揭曉後跟讀模仿',descFocus:'看中文回想英文，點擊後跟讀。',secs:8},
+  SPEAK_OUT:{label:'開口',chip:'開口',icon:'mic',chipIcon:'mic',name:'Phase 4: Full Power',bg:'#78350f',desc:'極限輸出：錄下你的聲音，與原音比對',descFocus:'模仿、錄音並比對。',secs:14},
+  STRIPPING:{label:'剝離',chip:'首字回想',icon:'shield',chipIcon:'shield',name:'Phase 5: Memory Strike',bg:'#881337',desc:'核心發力：看首字，撐住整句 (按重播提示)',descFocus:'看首字，憑直覺背出整句 (按重播提示)。',secs:6},
+  CHINESE_TTS:{label:'聽譯',chip:'聽譯',icon:'brain',chipIcon:'rotateccw',name:'Phase 6: Translation',bg:'#18181b',desc:'轉換姿態：聽中文，反射英文',descFocus:'聽中文意思，腦中反射英文。',secs:6},
+  WORD_RECALL:{label:'生字回想',chip:'生字回想',icon:'pen',chipIcon:'pen',name:'Word Recall',bg:'#713f12',desc:'生字挖空了：看中文提示，想出那個字',descFocus:'看中文提示想出生字，只在有存生字的句子出現。',secs:6},
+  REVIEW:{label:'確認',chip:'確認',icon:'check',chipIcon:'check',name:'Phase 7: Review Check',bg:'#064e3b',desc:'成果驗收：點擊揭曉，確認動作標準',descFocus:'點擊揭曉答案，AI解說，確認記憶。',secs:5},
+};
+const ORDER=['PURE_LISTEN','READ_LISTEN','SHADOWING','SPEAK_OUT','STRIPPING','CHINESE_TTS','WORD_RECALL','REVIEW'];
+const BLOCKS={
+  blind_listen:{label:'盲聽',icon:'headphones',desc:'連續播放，純耳朵感受語感',kicker:'Batch Listen',bg:'#0f172a',batchDesc:'連續聆聽所有句子'},
+  comprehension:{label:'理解',icon:'bulb',desc:'聽英文看中文字幕，建立語意連結',kicker:'Comprehension',bg:'#1e3a8a',batchDesc:'聽英文看中文字幕'},
+};
+const PRESETS={
+  full:{id:'full',name:'SubFit',phases:['READ_LISTEN','SHADOWING','SPEAK_OUT','STRIPPING','CHINESE_TTS','REVIEW'],blocks:['blind_listen','comprehension']},
+  hundredLS:{id:'hundredLS',name:'100LS',phases:['REVIEW','SPEAK_OUT'],blocks:['blind_listen','comprehension']},
+  shadowing:{id:'shadowing',name:'影子跟讀法',phases:['READ_LISTEN','SPEAK_OUT'],blocks:['blind_listen','comprehension']},
+  echo:{id:'echo',name:'回音法',phases:['REVIEW','SPEAK_OUT'],blocks:['blind_listen']},
+  light:{id:'light',name:'輕量模式',phases:['PURE_LISTEN','READ_LISTEN','SPEAK_OUT','REVIEW'],blocks:[]},
+  review:{id:'review',name:'複習模式',phases:['STRIPPING','CHINESE_TTS','REVIEW'],blocks:[]},
+  wordReview:{id:'wordReview',name:'生字複習',phases:['WORD_RECALL','REVIEW'],blocks:[]},
+  custom:{id:'custom',name:'我的練法'},
+};
+const PRESET_LIST=Object.values(PRESETS);
+const N=8;   // 這一組幾句（8 句剛好一排句號圓鈕）
+const EN="I've been meaning to ask you something.";
+const ZH='我一直想問你一件事。';
+const LINES=[
+  ['Morning. Did you sleep okay?','早安，睡得好嗎？'],
+  [EN,ZH],
+  ['Sure, go ahead.','好啊，你說。'],
+  ['Are you free this weekend?','你這週末有空嗎？'],
+];
+const DEMO=[...PRESETS.full.phases];   // 章節 3 照預設練法 SubFit 跑（第一關是看聽，不是純聽）
+const DUR={PURE_LISTEN:3000,READ_LISTEN:3600,SHADOWING:4000,SPEAK_OUT:4800,STRIPPING:3800,CHINESE_TTS:3600,WORD_RECALL:3800,REVIEW:4000,NAV:3400};
+
+/* ── 目前的練法（長條、準備頁、設定頁、沙盒都讀這份） ── */
+let flow={blocks:[...PRESETS.full.blocks],phases:[...PRESETS.full.phases]};
+let presetId='full';
+let S=1;        // 手機縮放比例（游標座標換算用）
+let epoch=0;    // 換章節就 +1，讓延遲中的假點擊作廢
+
+const phone=$('#phone'), cur=$('#cur'), strip=$('#strip'), cap=$('#cap');
+const screens={prep:$('#scr-prep'),batch:$('#scr-batch'),train:$('#scr-train'),flow:$('#scr-flow')};
+const sameSet=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
+const detectPreset=(blocks,phases)=>{
+  for(const p of PRESET_LIST){ if(p.phases&&sameSet(p.phases,phases)&&sameSet([...p.blocks].sort(),[...blocks].sort())) return p.id; }
+  return 'custom';
+};
+function estMin(){
+  const per=flow.phases.reduce((s,p)=>s+PH[p].secs,0)+2;
+  return Math.max(1,Math.round((per*N+flow.blocks.length*N*3)/60));
+}
+function setFlow(blocks,phases,pid){
+  flow={blocks:Object.keys(BLOCKS).filter(b=>blocks.includes(b)),phases:[...phases]};
+  presetId=pid!==undefined?pid:detectPreset(flow.blocks,flow.phases);
+  renderStrip(); renderPrep(); renderFlowScreen();
+}
+function applyPreset(id){ setFlow(PRESETS[id].blocks,PRESETS[id].phases,id); }
+function showScreen(id){ for(const k in screens) screens[k].classList.toggle('on',k===id); }
+
+/* TopBar */
+const topbar=(star)=>`<div class="topbar"><div class="xp"><span class="lv">LV.3</span><div class="xpbar"><i style="width:48%"></i></div><div class="xpt">240 / 500 XP</div></div><div class="tb-r">${star?`<div class="tb-btn star">${ic('star',18)}</div>`:''}<div class="tb-btn">${ic('x',18,2.5)}</div></div></div>`;
+$('#tb-prep').outerHTML=topbar(false); $('#tb-batch').outerHTML=topbar(false); $('#tb-train').outerHTML=topbar(true);
+$('#tgt').innerHTML=ic('target',48);
+$('#fl-back').innerHTML=`${ic('chevl',20,2.5)}返回`;
+
+/* ── 練法長條 ── */
+function renderStrip(){
+  const warm=flow.blocks.map(b=>`<span class="sc warm">${ic(BLOCKS[b].icon,12)}${BLOCKS[b].label}</span>`).join('');
+  const per=flow.phases.map(p=>`<span class="sc">${ic(PH[p].icon,12)}${PH[p].label}</span>`).join('');
+  strip.innerHTML=(warm||'<span class="sc none">不暖身</span>')+'<span class="arrow">›</span>'+per;
+}
+
+/* ── 課程準備頁 ── */
+function renderPrep(){
+  const rows=[];
+  if(flow.blocks.includes('blind_listen')) rows.push({icon:'headphones',lab:`閉眼連聽 ${N} 句`});
+  if(flow.blocks.includes('comprehension')) rows.push({icon:'bulb',lab:`聽＋看字幕 ${N} 句`});
+  rows.push({icon:'target',lab:`逐句精練 × ${N}`,chips:flow.phases});
+  $('#steps').innerHTML=rows.map((r,i)=>`<div class="step"><div class="num">${i+1}</div><div style="flex:1;min-width:0"><div class="lab">${ic(r.icon,14)}<span>${r.lab}</span></div>${r.chips?`<div><span class="more" id="prep-more">${r.chips.length} 個階段 ▼</span><div class="chips" id="prep-chips">${r.chips.map(p=>`<span class="chip">${ic(PH[p].chipIcon,12)}${PH[p].chip}</span>`).join('')}</div></div>`:''}</div></div>`).join('');
+  $('#prep-meta').textContent=`共 ${N} 句・約 ${estMin()} 分鐘`;
+}
+function prepReveal(k){ const r=$('#steps').children[k]; if(r) r.classList.add('in'); }
+function prepChips(on){ const c=$('#prep-chips'), m=$('#prep-more'); if(c) c.classList.toggle('in',on); if(m) m.textContent=on?'收起 ▲':`${flow.phases.length} 個階段 ▼`; }
+function prepShowAll(){ for(const r of $('#steps').children) r.classList.add('in'); prepChips(true); }
+
+/* ── 批次暖身頁 ── */
+function showBatch(block,n){
+  const b=BLOCKS[block];
+  screens.batch.style.background=b.bg;
+  $('#bt-lbl').textContent=b.kicker;
+  const zh=LINES[(n-1)%LINES.length][1];
+  $('#bt-main').innerHTML=(block==='blind_listen'
+    ? `<div class="icon80" style="color:rgba(255,255,255,.7)">${ic('headphones',80,2)}</div><div class="pill-xl">專心聆聽，字幕隱藏中...</div>`
+    : `<div class="icon80" style="margin-bottom:32px">${ic('bulb',80,2)}</div><div class="sub-zh"><span class="pop">${zh}</span></div>`)
+    +`<div class="prog"><span class="n">${n} / ${N}</span><div class="bar"><i style="width:${n/N*100}%"></i></div></div><div class="desc">${b.batchDesc}</div>`;
+}
+
+/* ── 逐句訓練頁 ── */
+const split=s=>{const i=s.indexOf(' ');return [s.slice(0,i),s.slice(i)];};
+function headHTML(phases,idx,ear,speech){
+  const segs=[...phases,'NAV'].map((_,i)=>`<i class="${i<=idx?'on':''}"></i>`).join('');
+  const circ=Array.from({length:N},(_,i)=>`<span class="${i===0?'cur':''}">${i+1}</span>`).join('');
+  return `<div class="rep"><span class="s">第 1 / ${N} 句</span><span class="d"></span><span class="c">${ic('ear',12)}${ear}</span>${speech?`<span class="d"></span><span class="c">${ic('mic',12)}${speech}</span>`:''}</div><div class="segs">${segs}</div><div class="circles">${circ}</div><div class="phase">${idx>=phases.length?'VICTORY':PH[phases[idx]].name}</div>`;
+}
+const pillsHTML=`<div class="pills"><div class="pillg y"><span>0.5x</span><span>0.75x</span><span class="on">1x</span></div><div class="pillg y"><span class="on">原音</span><span>AI</span></div></div>`;
+function footHTML(id,idx){
+  if(id==='NAV') return `<div class="rate" id="rate"><div class="r1">又忘了<small>再試一次</small></div><div class="r2">還好<small>明天</small></div><div class="r3">記住了<small>明天</small></div><div class="r4">很熟<small>4 天後</small></div></div>`;
+  const dim=id==='SPEAK_OUT';
+  return (id==='CHINESE_TTS'?'':pillsHTML)+`<div class="nav"><div class="prev ${idx===0?'hide':''}">${ic('chevl',24,3)}</div><div class="col"><div class="replay">${ic('rotatecw',32,3)}</div><small>跟著念</small></div><div class="col"><div class="nextb ${dim?'dim':''}" id="nextb">${ic('chevr',32,4)}</div><small>再試一次</small></div></div>`;
+}
+const CONTENT={
+  PURE_LISTEN:()=>`<div class="c300"><div class="icon80" style="color:rgba(255,255,255,.8)">${ic('headphones',80,2)}</div><div class="pill-xl">專心聆聽，字幕隱藏中...</div></div>`,
+  READ_LISTEN:()=>`<div class="c300"><div class="big ts">${EN}</div><div class="box64" id="rl-box"><span class="btn-sm" id="rl-btn">查看譯文</span></div></div>`,
+  SHADOWING:()=>`<div class="c300"><div class="zh2">${ZH}</div><div id="sh-area"><span class="btn-lg" id="sh-btn">👆 顯示原文</span></div><div class="box64" style="margin-top:0" id="sh-hint"></div></div>`,
+  SPEAK_OUT:()=>`<div class="rec-wrap"><div class="rec-sen" id="rec-sen">${EN}</div><div class="h6"></div><div class="micb" id="micb">${ic('mic',48,2)}</div><div class="h9"><span class="status12" id="rec-st">先聽一次，再長按錄音</span></div><div class="acts" id="rec-acts"><span class="mine">${ic('play',15,2,'currentColor')} 我的錄音</span><span class="cmp">${ic('arrows',15)} 比較</span></div></div>`,
+  STRIPPING:()=>{const [f,r]=split(EN);return `<div class="c300"><div class="big ts"><span style="color:#facc15">${f}</span><span class="ghost" id="ghost">${r}</span></div><div class="box64" style="margin-top:0"><span class="hint12" style="color:rgba(255,255,255,.2)" id="st-hint">點擊模糊處可揭曉</span></div></div>`;},
+  CHINESE_TTS:()=>`<div class="c300" id="zh-area"><div class="brain">${ic('brain',80,2)}</div><div class="peek">點擊偷看原文</div></div>`,
+  WORD_RECALL:()=>`<div class="c300"><div class="big ts cloze" style="line-height:1.4">I've <span class="blank" id="bl">been meaning</span> to ask you something.</div><div class="wl"><div id="wrow"><span class="m">一直想（做某事）<span class="pos">phr.</span></span><span class="a" id="wa">點我看答案</span></div></div></div>`,
+  REVIEW:()=>`<div class="c300"><div class="zh2" style="margin-bottom:24px">${ZH}</div><div class="dashed" id="rv-box"><span>👆 點擊揭曉</span></div></div>`,
+};
+let earCount=0;
+function showPhase(id,phases){
+  const p=PH[id], idx=phases.indexOf(id);
+  earCount=Math.min(earCount+1,9);
+  screens.train.style.background=p.bg;
+  $('#tr-head').innerHTML=headHTML(phases,idx,earCount,0);
+  $('#tr-sticky').className='sticky-rv'; $('#tr-sticky').innerHTML='';
+  $('#tr-main').className='tr-main';
+  $('#tr-main').innerHTML=`<div class="tr-inner">${CONTENT[id]()}<div class="tr-desc"><p>${p.desc}</p></div></div>`;
+  $('#tr-foot').innerHTML=footHTML(id,idx);
+}
+function showNav(phases){
+  earCount=Math.min(earCount+1,9);
+  screens.train.style.background='#0f172a';
+  $('#tr-head').innerHTML=headHTML(phases,phases.length,earCount,1);
+  $('#tr-sticky').className='sticky-rv'; $('#tr-sticky').innerHTML='';
+  $('#tr-main').className='tr-main';
+  $('#tr-main').innerHTML=`<div class="note">${ic('note',12,1.8)} 筆記</div><div class="tr-inner"><div class="c300"><div class="faded">${EN}</div></div><div class="tr-desc"><p>做得很好！重來一次還是繼續前進？</p></div></div>`;
+  $('#tr-foot').innerHTML=footHTML('NAV',phases.length);
+}
+/* 各階段中途的互動（章節 3 與沙盒共用）：先把假游標移過去，點下去才改畫面 */
+function tapAt(sel,fn,hold=0){
+  const ep=epoch, el=typeof sel==='string'?$(sel):sel; if(!el) return;
+  curTo(el);
+  setTimeout(()=>{ if(ep!==epoch) return; cur.classList.add('down'); if(hold) fn('down');
+    setTimeout(()=>{ if(ep!==epoch) return; cur.classList.remove('down'); if(!hold) fn(); else fn('up'); },hold||180); },480);
+}
+const MICRO={
+  READ_LISTEN:[[1400,()=>tapAt('#rl-btn',()=>{const b=$('#rl-box');if(b)b.innerHTML=`<div class="pop ts" style="font-size:18px;font-weight:700;color:#facc15">${ZH}</div>`;})]],
+  SHADOWING:[[1500,()=>tapAt('#sh-btn',()=>{const a=$('#sh-area');if(a)a.innerHTML=`<div class="pop" style="margin-top:32px"><div class="big ts">${EN}</div></div>`;const h=$('#sh-hint');if(h)h.innerHTML='<span class="hint12" style="animation:twpulse 2s infinite">跟著唸一遍，再點擊收回</span>';})]],
+  SPEAK_OUT:[[1100,()=>tapAt('#micb',(ph)=>{const m=$('#micb'),s=$('#rec-st');if(!m)return;
+      if(ph==='down'){m.classList.add('rec');if(s)s.textContent='錄音中… 放開結束';}
+      else{m.classList.remove('rec');if(s)s.textContent='長按重新錄音';const a=$('#rec-acts');if(a)a.classList.add('on');const nb=$('#nextb');if(nb)nb.classList.remove('dim');const r=$('#tr-head .rep');if(r)r.insertAdjacentHTML('beforeend',`<span class="d"></span><span class="c">${ic('mic',12)}1</span>`);}
+    },1900)]],
+  STRIPPING:[[1800,()=>tapAt('#ghost',()=>{const g=$('#ghost');if(g)g.classList.add('rv');const h=$('#st-hint');if(h)h.textContent='點擊可重新模糊';})]],
+  CHINESE_TTS:[[1700,()=>tapAt('#zh-area .brain',()=>{const a=$('#zh-area');if(a)a.innerHTML=`<div class="big ts pop">${EN}</div><div class="peek hint12" style="margin-top:16px">點擊收回</div>`;})]],
+  WORD_RECALL:[[1700,()=>tapAt('#wrow',()=>{const b=$('#bl');if(b)b.classList.add('rv');const a=$('#wa');if(a){a.classList.add('rv');a.textContent='been meaning';}})]],
+  REVIEW:[[1500,()=>tapAt('#rv-box',()=>{const st=$('#tr-sticky');st.className='sticky-rv on';st.innerHTML=`<div class="row2"><div class="en">${EN}</div><div class="spk">${ic('volume',18)}</div></div><div class="zh">${ZH}</div>`;
+      const m=$('#tr-main');m.className='tr-main rev';m.innerHTML=`<div class="tr-inner" style="margin-top:56px"><span class="explain-btn pop">${ic('search',18,2.5)} 看這句的說話邏輯</span></div>`;})]],
+  NAV:[[1400,()=>tapAt('#rate .r3',()=>{const r=$('#rate .r3');if(r)r.classList.add('pick');})]],
+};
+
+/* ── 練法設定頁 ── */
+function renderFlowScreen(){
+  $('#fl-cards').innerHTML=PRESET_LIST.map(p=>`<div class="card ${p.id===presetId?'act':''}" data-p="${p.id}"><span class="rd"></span><span class="nm">${p.name}</span>${p.id==='custom'?'':`<span class="inf">${ic('info',13)}</span>`}</div>`).join('');
+  $('#fl-warm').innerHTML=Object.entries(BLOCKS).map(([id,b])=>{const on=flow.blocks.includes(id);return `<div class="row ${on?'':'off'}"><div class="in"><div class="ic">${ic(b.icon,18)}</div><div class="tx"><b>${b.label}</b><small>${b.desc}</small></div><div class="tog ${on?'on':''}" data-b="${id}"></div></div></div>`;}).join('');
+  const inl={SPEAK_OUT:'<div class="inl"><span class="lb">字幕預設</span><div class="g"><span class="on">開</span><span>關</span></div></div>',REVIEW:'<div class="inl"><span class="lb">例句顯示</span><div class="g"><span class="on">中文優先</span><span>英文優先</span><span>同時顯示</span></div></div>'};
+  const row=(p,on)=>`<div class="row ${on?'':'off'}" data-ph="${p}"><div class="in">${on?`<div class="grip" data-grip="${p}">${ic('grip',18)}</div>`:'<div class="grip"></div>'}<div class="ic">${ic(PH[p].icon,18)}</div><div class="tx"><b>${PH[p].label}</b><small>${PH[p].descFocus}</small></div><div class="tog ${on?'on':''}" data-sw="${p}"></div></div>${on&&inl[p]?inl[p]:''}</div>`;
+  $('#fl-list').innerHTML=[...flow.phases.map(p=>row(p,true)),...ORDER.filter(p=>!flow.phases.includes(p)).map(p=>row(p,false))].join('')
+    +`<div class="navrow"><span class="grip">${ic('lock',14)}</span><span>完成導航（固定）</span></div>`;
+}
+function flScroll(target){
+  const body=$('#fl-body'), view=$('#fl-view');
+  let y=0;
+  if(target!=='top'){ const el=$(target); y=Math.max(0,el.offsetTop-8); }
+  const max=Math.max(0,body.scrollHeight-view.clientHeight);
+  body.style.transform=`translateY(${-Math.min(y,max)}px)`;
+}
+const cardEl=id=>$(`#fl-cards [data-p="${id}"]`);
+const warmSw=id=>$(`#fl-warm [data-b="${id}"]`);
+const rowEl=p=>$(`#fl-list [data-ph="${p}"]`);
+const rowSw=p=>$(`#fl-list [data-sw="${p}"]`);
+const rowGrip=p=>$(`#fl-list [data-grip="${p}"]`);
+
+/* ── 假游標 ── */
+function curTo(el){
+  if(!el) return;
+  const pr=phone.getBoundingClientRect(), r=el.getBoundingClientRect();
+  cur.style.left=((r.left+r.width/2-pr.left)/S-6)+'px';
+  cur.style.top=((r.top+r.height/2-pr.top)/S-6)+'px';
+  cur.classList.add('show');
+}
+function curBy(dx,dy){ cur.style.left=(parseFloat(cur.style.left)+dx)+'px'; cur.style.top=(parseFloat(cur.style.top)+dy)+'px'; }
+const curHide=()=>{cur.classList.remove('show','down');};
+const S_=(at,run)=>({at,run});
+function tapSteps(at,getEl,fn){
+  return [S_(at,()=>curTo(getEl())),S_(at+520,()=>cur.classList.add('down')),S_(at+700,()=>{cur.classList.remove('down');fn();})];
+}
+
+/* ── 旁白 ── */
+let sayTok=0;
+function say(html){
+  const tok=++sayTok, tag=`第 ${si+1} 章 · ${scenes[si].title}`;
+  cap.classList.add('fade');
+  setTimeout(()=>{ if(tok!==sayTok) return; cap.innerHTML=`<span class="tag">${tag}</span>${html}`; cap.classList.remove('fade'); },200);
+}
+
+/* ── 章節腳本 ── */
+const CAP2={
+  PURE_LISTEN:'接著進入<b>逐句精練</b>：每一句都依序經過你選的階段。第一關<b>純聽</b>，沒有文字，閉上眼聽。',
+  READ_LISTEN:'接著進入<b>逐句精練</b>：每一句都依序經過你選的階段。預設練法的第一關是<b>看聽</b>：文字和聲音對齊，想看中文就點「查看譯文」。',
+  SHADOWING:'<b>跟讀</b>：先只給中文，自己回想英文怎麼說，點「顯示原文」後跟著唸。',
+  SPEAK_OUT:'<b>開口</b>：長按麥克風錄音，放開後可以聽自己的錄音、和原音比較。句子一開始要不要遮住，在練法設定裡選。',
+  STRIPPING:'<b>剝離</b>：只留第一個字，其餘模糊掉，憑記憶把整句撐出來。',
+  CHINESE_TTS:'<b>聽譯</b>：只聽中文，腦中反射出英文；想不起來再點腦袋偷看。',
+  REVIEW:'<b>確認</b>：點擊揭曉答案，順手看 AI 講解。另外兩關預設沒開：<b>純聽</b>（不給文字先聽一遍）和有存生字才出現的<b>生字回想</b>。',
+  NAV:'最後替這句打分，SubFit 用<b>間隔重複</b>安排下次複習。然後下一句，再跑一輪。',
+};
+const scenes=[
+  {title:'一堂課怎麼跑',len:9600,
+   setup(){ applyPreset('full'); showScreen('prep'); curHide(); say('SubFit 的一堂課分兩段：先把這組句子整段<b>暖身</b>聽過，再<b>一句一句精練</b>。開始前的 Start Session 會先列出今天要跑的步驟。'); },
+   steps:[S_(500,()=>prepReveal(0)),S_(1400,()=>prepReveal(1)),S_(2300,()=>prepReveal(2)),
+          ...tapSteps(3400,()=>$('#prep-more'),()=>prepChips(true)),
+          S_(5000,()=>{curHide();say('這整條流程叫<b>練法</b>。清單上的每一步都可以自己決定要不要、照什麼順序，預估時間也會跟著變。');})]},
+  {title:'批次暖身',len:10200,
+   setup(){ showScreen('batch'); showBatch('blind_listen',1); curHide(); say('暖身第一段是<b>盲聽</b>：不給文字，整組連續播放，先用耳朵抓語感。'); },
+   steps:[S_(1100,()=>showBatch('blind_listen',2)),S_(2200,()=>showBatch('blind_listen',3)),S_(3300,()=>showBatch('blind_listen',4)),
+          S_(4500,()=>{showBatch('comprehension',1);say('第二段是<b>理解</b>：再聽一次，這回唸到哪句就顯示那句的中文，把聲音和意思接起來。兩段都可以在練法設定裡關掉。');}),
+          S_(5700,()=>showBatch('comprehension',2)),S_(6900,()=>showBatch('comprehension',3)),S_(8100,()=>showBatch('comprehension',4))]},
+  {title:'逐句精練',len:0,
+   setup(){ earCount=0; applyPreset('full'); showScreen('train'); curHide(); },
+   steps:(()=>{const st=[];let t=0;for(const p of DEMO){const pp=p;st.push(S_(t,()=>{curHide();showPhase(pp,DEMO);say(CAP2[pp]);}));for(const [at,fn] of (MICRO[pp]||[]))st.push(S_(t+at,fn));t+=DUR[pp];}
+     st.push(S_(t,()=>{curHide();showNav(DEMO);say(CAP2.NAV);}));for(const [at,fn] of MICRO.NAV)st.push(S_(t+at,fn));t+=DUR.NAV;scenesLen2=t+400;return st;})()},
+  {title:'挑一個模板',len:12600,
+   setup(){ applyPreset('full'); showScreen('flow'); flScroll('top'); curHide(); say('不想自己排？練法設定裡有 7 個<b>模板</b>。預設的 SubFit 是兩段暖身加六個逐句階段。'); },
+   steps:[...tapSteps(1500,()=>cardEl('hundredLS'),()=>{applyPreset('hundredLS');say('<b>100LS</b>：盲聽、看中文確認劇情，逐句只留確認和開口。適合跑劇集與電影。');}),
+          ...tapSteps(5100,()=>cardEl('echo'),()=>{applyPreset('echo');say('<b>回音法</b>：只做盲聽暖身，逐句先確認再開口模仿。');}),
+          ...tapSteps(8700,()=>cardEl('light'),()=>{applyPreset('light');say('<b>輕量模式</b>：跳過暖身，聽、看、說、確認四關。趕時間就用這個。');})]},
+  {title:'自己調',len:18400,
+   setup(){ applyPreset('full'); showScreen('flow'); flScroll('#fs-warm'); curHide(); say('模板只是起點。往下捲，每一段都能自己調。先把暖身的「理解」關掉，右上角就會跳成「我的練法」。'); },
+   steps:[...tapSteps(1400,()=>warmSw('comprehension'),()=>{setFlow(flow.blocks.filter(b=>b!=='comprehension'),flow.phases);}),
+          S_(3200,()=>{curHide();flScroll('top');}),
+          S_(4600,()=>{flScroll('#fs-list');say('逐句階段也一樣，不想做的關掉。');}),
+          ...tapSteps(5800,()=>rowSw('STRIPPING'),()=>{setFlow(flow.blocks,flow.phases.filter(p=>p!=='STRIPPING'));}),
+          S_(8000,()=>say('順序用<b>拖曳</b>換：按住左邊的把手，把「開口」拉到「跟讀」前面。')),
+          S_(8400,()=>{curTo(rowGrip('SPEAK_OUT'));}),
+          S_(9000,()=>{cur.classList.add('down');rowEl('SPEAK_OUT').classList.add('lift');}),
+          S_(9600,()=>{const a=rowEl('SPEAK_OUT'),b=rowEl('SHADOWING');const h=b.offsetHeight;a.style.transform=`translateY(${-h}px) scale(1.05)`;b.style.transform=`translateY(${a.offsetHeight}px)`;curBy(0,-h);}),
+          S_(10700,()=>{cur.classList.remove('down');const ph=[...flow.phases];const i=ph.indexOf('SPEAK_OUT'),j=ph.indexOf('SHADOWING');ph.splice(i,1);ph.splice(j,0,'SPEAK_OUT');setFlow(flow.blocks,ph);}),
+          S_(12200,()=>{curHide();flScroll('top');}),
+          ...tapSteps(13200,()=>$('#fl-save'),()=>{showScreen('prep');prepShowAll();}),
+          S_(14600,()=>say('按「儲存」就存成<b>我的練法</b>，下次開始訓練的清單就照這個跑；之後換過模板，再切回「我的練法」也還在。開口的字幕預設、確認的例句顯示，也都在這一頁調。'))]},
+  {title:'換你排',len:Infinity,playground:true,
+   setup(){ setFlow(flow.blocks,flow.phases); curHide(); renderPG(); runner.build(); say('換你排一次。點右邊的開關與箭頭，手機會照你的順序把一句跑一遍，下方長條就是你排出來的練法。'); },
+   update(dt){ runner.update(dt); },
+   steps:[]},
+];
+var scenesLen2; scenes[2].len=scenesLen2;
+
+/* ── 沙盒：照目前的 flow 一直循環跑 ── */
+const runner={items:[],i:-1,t:0,dur:0,micro:[],mi:0,
+  build(){ this.items=[...flow.blocks.map(b=>({type:'batch',id:b})),...flow.phases.map(p=>({type:'phase',id:p})),{type:'nav'}]; this.i=-1; earCount=0; this.next(); },
+  next(){ epoch++; curHide(); this.i=(this.i+1)%this.items.length; this.t=0; this.mi=0; const it=this.items[this.i];
+    if(it.type==='batch'){ showScreen('batch'); showBatch(it.id,1); this.micro=[[900,()=>showBatch(it.id,2)],[1800,()=>showBatch(it.id,3)]]; this.dur=2800; }
+    else if(it.type==='phase'){ showScreen('train'); showPhase(it.id,flow.phases); this.micro=MICRO[it.id]||[]; this.dur=DUR[it.id]; }
+    else { showScreen('train'); showNav(flow.phases); this.micro=MICRO.NAV; this.dur=DUR.NAV; } },
+  update(dt){ this.t+=dt; while(this.mi<this.micro.length&&this.micro[this.mi][0]<=this.t){ this.micro[this.mi][1](); this.mi++; } if(this.t>=this.dur) this.next(); },
+};
+const pg=$('#pg'), pgNote=$('#pg-note');
+function renderPG(){
+  $('#pg-blocks').innerHTML=Object.entries(BLOCKS).map(([id,b])=>{const on=flow.blocks.includes(id);return `<button type="button" class="tg-b ${on?'on':''}" data-b="${id}" aria-pressed="${on}">${ic(b.icon,13)}${b.label}</button>`;}).join('');
+  const en=flow.phases, dis=ORDER.filter(p=>!en.includes(p));
+  const row=(p,on,i)=>`<div class="pr ${on?'':'off'}"><div class="mv">${on?`<button type="button" data-up="${p}" aria-label="${PH[p].label} 上移" ${i===0?'disabled':''}>${ic('up',12)}</button><button type="button" data-down="${p}" aria-label="${PH[p].label} 下移" ${i===en.length-1?'disabled':''}>${ic('down',12)}</button>`:''}</div><span class="pi">${ic(PH[p].icon,13)}</span><span class="pn">${PH[p].label}</span><span class="pd">${PH[p].descFocus}</span><button type="button" class="sw ${on?'on':''}" data-t="${p}" role="switch" aria-checked="${on}" aria-label="${PH[p].label}"></button></div>`;
+  $('#pg-list').innerHTML=[...en.map((p,i)=>row(p,true,i)),...dis.map(p=>row(p,false))].join('');
+}
+let noteTok=0;
+function note(msg){ pgNote.textContent=msg; const k=++noteTok; setTimeout(()=>{ if(k===noteTok) pgNote.textContent=''; },2200); }
+pg.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  let blocks=[...flow.blocks], ph=[...flow.phases];
+  if(b.dataset.b){ const id=b.dataset.b; blocks=blocks.includes(id)?blocks.filter(x=>x!==id):[...blocks,id]; }
+  else if(b.dataset.t){ const p=b.dataset.t; if(ph.includes(p)){ if(ph.length===1){ note('至少留一個逐句階段'); return; } ph=ph.filter(x=>x!==p); } else ph.push(p); }
+  else if(b.dataset.up){ const i=ph.indexOf(b.dataset.up); if(i>0){ [ph[i-1],ph[i]]=[ph[i],ph[i-1]]; } }
+  else if(b.dataset.down){ const i=ph.indexOf(b.dataset.down); if(i<ph.length-1){ [ph[i+1],ph[i]]=[ph[i],ph[i+1]]; } }
+  else return;
+  setFlow(blocks,ph); renderPG(); runner.build();
+  if(!playing) setPlaying(true);
+});
+
+/* ── 播放引擎 ── */
+let si=0,t=0,applied=0,playing=true,last=performance.now();
+const chaps=$('#chaps');
+chaps.innerHTML=scenes.map((s,i)=>`<li data-i="${i}" tabindex="0"><span class="k">${String(i+1).padStart(2,'0')}</span><span>${s.title}</span><span class="bar"><i></i></span></li>`).join('');
+const chapEls=[...chaps.children];
+chaps.addEventListener('click',e=>{const li=e.target.closest('li');if(li)enter(+li.dataset.i);});
+chaps.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const li=e.target.closest('li');if(li){e.preventDefault();enter(+li.dataset.i);}}});
+
+function enter(i){
+  epoch++;
+  si=Math.max(0,Math.min(scenes.length-1,i)); t=0; applied=0;
+  const sc=scenes[si];
+  pg.classList.toggle('on',!!sc.playground);
+  sc.steps.sort((a,b)=>a.at-b.at);
+  sc.setup(); runSteps();
+  chapEls.forEach((li,k)=>{li.classList.toggle('cur',k===si);li.classList.toggle('done',k<si);li.querySelector('.bar i').style.width=k<si?'100%':'0';});
+  $('#b-prev').disabled=si===0; $('#b-next').disabled=si===scenes.length-1;
+}
+function runSteps(){ const st=scenes[si].steps; while(applied<st.length&&st[applied].at<=t){ st[applied].run(); applied++; } }
+function setPlaying(v){ playing=v; last=performance.now(); $('#b-play').innerHTML=v?`${ic('pause',14)} 暫停`:`${ic('play',14)} 播放`; phone.classList.toggle('paused',!v); }
+function frame(now){
+  const dt=Math.min(100,now-last); last=now;
+  if(playing){
+    t+=dt; const sc=scenes[si]; runSteps(); if(sc.update) sc.update(dt);
+    if(t>=sc.len){
+      if(MODE.video&&si===scenes.length-2){ setPlaying(false); curHide(); $('#card-end').classList.add('on'); window.__done=true; }   // 錄影不含沙盒，直接接片尾
+      else if(si<scenes.length-1) enter(si+1); else setPlaying(false);
+    }
+    else if(isFinite(sc.len)) chapEls[si].querySelector('.bar i').style.width=(t/sc.len*100)+'%';
+  }
+  requestAnimationFrame(frame);
+}
+$('#b-play').addEventListener('click',()=>setPlaying(!playing));
+$('#b-prev').addEventListener('click',()=>enter(si-1));
+$('#b-next').addEventListener('click',()=>enter(si+1));
+$('#b-replay').addEventListener('click',()=>{enter(0);setPlaying(true);});
+$('#b-prev').innerHTML=ic('chevl',16); $('#b-next').innerHTML=ic('chevr',16);
+document.addEventListener('keydown',e=>{
+  if(e.target.closest('button,li,input')) return;
+  if(e.key===' '){e.preventDefault();setPlaying(!playing);}
+  else if(e.key==='ArrowRight'&&si<scenes.length-1) enter(si+1);
+  else if(e.key==='ArrowLeft'&&si>0) enter(si-1);
+});
+
+/* ── 手機縮放：邏輯尺寸 390×844（含邊框 402×856），依欄寬縮小 ── */
+function fit(){
+  const w=$('#phone-wrap').clientWidth; let s=Math.min(0.78,w/402);
+  if(innerWidth<=760) s=Math.min(w/402,(innerHeight*0.66)/856);
+  if(MODE.video==='land') s=Math.min(w/402,(innerHeight-160)/856);
+  if(MODE.video==='port') s=Math.min(w/402,(innerHeight*0.56)/856);
+  S=Math.max(.42,s);
+  document.documentElement.style.setProperty('--s',S.toFixed(3));
+}
+fit();
+if(typeof ResizeObserver!=='undefined') new ResizeObserver(fit).observe($('#phone-wrap'));
+addEventListener('resize',fit);
+
+/* 起跑 */
+renderStrip(); renderPrep(); renderFlowScreen();
+if(MODE.video){
+  // 錄影：等字型載好再出片頭卡 2.6 秒，接著從第一章開始；結束時 window.__done = true（錄影腳本看這個收工）
+  enter(0); setPlaying(false); $('#card-intro').classList.add('on');
+  const start=()=>{ fit(); setTimeout(()=>{ $('#card-intro').classList.remove('on'); enter(0); setPlaying(true); },2600); };
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(start);
+} else { enter(0); setPlaying(true); }
+requestAnimationFrame(frame);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+---
+// 練法解說動畫（互動式）：嵌入 public/flow-explainer/index.html 的 ?embed 模式。
+// 高度由動畫頁用 postMessage 回報，iframe 跟著長高，手機與桌面都不會多出一層捲軸。
+// 動畫本身是獨立的 HTML（不是 Astro 元件），要改內容直接改 public/flow-explainer/index.html；
+// 同一份檔案也能單獨開：/flow-explainer/（有頁首頁尾的完整版）。
+interface Props {
+	title?: string;
+}
+const { title = 'SubFit 練法解說動畫' } = Astro.props;
+---
+
+<div class="flow-explainer" data-flow-explainer>
+	<iframe src="/flow-explainer/?embed" title={title} loading="lazy" scrolling="no"></iframe>
+	<p class="fallback"><a href="/flow-explainer/" target="_blank" rel="noopener">在新分頁開啟動畫 ↗</a></p>
+</div>
+
+<script>
+	// 動畫頁每次高度變化都會送 { type: 'subfit-explainer-height', height }，照著調 iframe 高度
+	document.querySelectorAll<HTMLIFrameElement>('[data-flow-explainer] iframe').forEach((frame) => {
+		window.addEventListener('message', (e) => {
+			if (e.source !== frame.contentWindow) return;
+			const d = e.data;
+			if (d && d.type === 'subfit-explainer-height' && typeof d.height === 'number') {
+				frame.style.height = `${Math.ceil(d.height)}px`;
+			}
+		});
+	});
+</script>
+
+<style>
+	.flow-explainer {
+		margin: 1.5em 0;
+	}
+	.flow-explainer iframe {
+		display: block;
+		width: 100%;
+		height: 980px; /* 收到回報前的預設高度，之後由 postMessage 覆蓋 */
+		border: 0;
+		border-radius: var(--radius);
+		background: var(--cream);
+	}
+	.fallback {
+		text-align: right;
+		font-size: 0.85em;
+		margin: 0.4em 0 0;
+	}
+</style>

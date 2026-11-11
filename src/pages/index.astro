@@ -8,6 +8,7 @@ import Header from '../components/Header.astro';
 import PostGrid from '../components/PostGrid.astro';
 import StoreBadges from '../components/StoreBadges.astro';
 import TrainingFlow from '../components/TrainingFlow.astro';
+import FlowExplainer from '../components/FlowExplainer.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { faqs } from '../data/faqs';
 import heroImage from '../assets/hero.jpg';
@@ -123,6 +124,16 @@ const plans = [
 
 			<!-- ============ 訓練流程（可切換模板） ============ -->
 			<TrainingFlow />
+
+			<!-- ============ 練法解說動畫（互動式，iframe 嵌 public/flow-explainer/） ============ -->
+			<section class="container explainer">
+				<div class="section-head">
+					<span class="eyebrow">WALKTHROUGH</span>
+					<h2>看它實際怎麼跑</h2>
+					<p class="section-sub">一支示範手機走完一堂課：暖身、逐句每一關、換模板、自己調；最後一章讓你排一次</p>
+				</div>
+				<FlowExplainer />
+			</section>
 
 			<!-- ============ 功能 ============ -->
 			<section id="features" class="features-wrap">
