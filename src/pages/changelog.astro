@@ -1,0 +1,92 @@
+---
+import Layout from '../layouts/BlogPost.astro';
+import { changelog } from '../data/changelog';
+---
+
+<Layout
+	title="更新紀錄 — SubFit"
+	description="SubFit 從 2026 年 1 月第一個原型到現在的更新紀錄：逐句訓練流程、各種匯入方式、跨裝置同步、App Store 與 Google Play 上架。"
+	pubDate={new Date('2026-01-31')}
+	updatedDate={new Date('2026-11-12')}
+>
+	<p>
+		SubFit 從一個逐句播放字幕的小原型開始，一路長成可以在網頁、Android、iOS 上練習的 App。這裡依月份整理每次更新，最新的在最上面。
+	</p>
+	<p class="note">
+		版本號說明：網頁版與 iOS 走 1.x，Android 走 2.x，同一時期的功能是一樣的。
+	</p>
+
+	<ol class="timeline">
+		{
+			changelog.map((m) => (
+				<li class="month">
+					<h2>
+						{m.month}
+						<span class="month-title">{m.title}</span>
+					</h2>
+					{m.versions && <p class="versions">版本：{m.versions}</p>}
+					{m.milestone && <p class="milestone">{m.milestone}</p>}
+					<ul>
+						{m.items.map((item) => (
+							<li>{item}</li>
+						))}
+					</ul>
+				</li>
+			))
+		}
+	</ol>
+</Layout>
+
+<style>
+	.note {
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+	}
+	.timeline {
+		list-style: none;
+		padding: 0;
+		margin: 2em 0 0;
+	}
+	.month {
+		position: relative;
+		padding: 0 0 1.5em 1.5em;
+		border-left: 2px solid var(--accent-soft);
+	}
+	/* 時間軸上的圓點 */
+	.month::before {
+		content: '';
+		position: absolute;
+		left: -7px;
+		top: 0.55em;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: var(--accent);
+	}
+	.month h2 {
+		margin: 0 0 0.3em;
+		font-size: 1.3em;
+	}
+	.month-title {
+		display: block;
+		font-size: 0.75em;
+		font-weight: 500;
+		color: rgb(var(--gray-dark));
+	}
+	.versions {
+		margin: 0 0 0.5em;
+		font-size: 0.85em;
+		color: rgb(var(--gray));
+	}
+	.milestone {
+		margin: 0.5em 0;
+		padding: 0.5em 0.9em;
+		border-radius: 8px;
+		background: var(--accent-soft);
+		color: var(--accent-dark);
+		font-weight: 600;
+	}
+	.month ul {
+		margin: 0.5em 0 0;
+	}
+</style>
