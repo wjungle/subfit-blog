@@ -103,7 +103,8 @@ const plans = [
 						<StoreBadges />
 					</div>
 					<!-- 金源獎入圍徽章（文字在 consts.ts 的 AWARD）。
-					     桌面：右欄主視覺上方；手機：單欄時自然排在商店按鈕之後 -->
+					     桌面：右欄主視覺上方；手機：CSS order 排到最上面置中。
+					     ⚠️ 不要把這層 <a> 改成外層 <div>（2026-11 試過，使用者電腦上 pill 變方塊） -->
 					<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
 						<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
 						<span class="award-text">
@@ -739,7 +740,8 @@ const plans = [
 		.hero h1 {
 			font-size: 1.85em;
 		}
-		/* 手機：單欄，取消桌面的格位指定，依 HTML 順序排：文案 → 徽章 → 主視覺 */
+		/* 手機：單欄，取消桌面的格位指定；徽章用 order 排到最上面並置中（HTML 結構不動）：
+		   徽章 → 文案 → 主視覺 */
 		.hero-text,
 		.hero-visual,
 		.award {
@@ -747,8 +749,9 @@ const plans = [
 			grid-row: auto;
 		}
 		.award {
-			justify-self: start;
-			margin-top: -0.4em;
+			order: -1;
+			justify-self: center;
+			margin-bottom: -0.8em;
 		}
 		.plans {
 			grid-template-columns: 1fr;
