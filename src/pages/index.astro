@@ -9,7 +9,7 @@ import PostGrid from '../components/PostGrid.astro';
 import StoreBadges from '../components/StoreBadges.astro';
 import TrainingFlow from '../components/TrainingFlow.astro';
 import FlowExplainer from '../components/FlowExplainer.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { AWARD, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { faqs } from '../data/faqs';
 import heroImage from '../assets/hero.jpg';
 import awardImage from '../assets/golden-code-award.webp';
@@ -86,17 +86,12 @@ const plans = [
 				</div>
 				<div class="container hero-grid">
 					<div class="hero-text">
-						<!-- 金源獎入圍徽章：用詞照官方「年度十強」，不可寫成得獎 -->
-						<a
-							class="award"
-							href="https://goldencodeawards.com/"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
+						<!-- 金源獎入圍徽章（文字在 consts.ts 的 AWARD） -->
+						<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
 							<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
 							<span class="award-text">
-								<span class="award-name">2026 第一屆 金源獎</span>
-								<strong>生活健康教育組　年度十強</strong>
+								<span class="award-name">{AWARD.name}</span>
+								<strong>{AWARD.result}</strong>
 							</span>
 						</a>
 						<span class="eyebrow">沉浸式語言訓練 App</span>

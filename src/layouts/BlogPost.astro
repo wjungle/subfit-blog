@@ -5,6 +5,8 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import { AWARD } from '../consts';
+import awardImage from '../assets/golden-code-award.webp';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -122,6 +124,10 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						<p>想把文章裡提到的技巧直接練起來？</p>
 						<a href="https://subfit.app" target="_blank" rel="noopener noreferrer">
 							→ 免費試試 SubFit 沉浸式訓練
+						</a>
+						<a class="cta-award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
+							<Image src={awardImage} alt="" width={20} height={23} />
+							{AWARD.name}　{AWARD.result}
 						</a>
 					</div>
 				</div>

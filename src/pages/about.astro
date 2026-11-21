@@ -1,6 +1,7 @@
 ---
 import StoreBadges from '../components/StoreBadges.astro';
 import Layout from '../layouts/BlogPost.astro';
+import { AWARD } from '../consts';
 ---
 
 <Layout
@@ -28,6 +29,10 @@ import Layout from '../layouts/BlogPost.astro';
 	<h2>關於 SubFit App</h2>
 	<p>
 		SubFit 把字幕檔、影音檔、英文雜誌的 QR Code 等教材，自動整理成一句一句的課程，帶你盲聽、跟讀、錄音比對、搭配 AI 講解，把被動收聽變成主動訓練。網頁版、Android 與 iOS 都可以使用。
+	</p>
+	<p>
+		2026 年，SubFit 入選 <a href={AWARD.url} target="_blank" rel="noopener noreferrer">第一屆金源獎</a>
+		<strong>生活健康教育組年度十強</strong>。
 	</p>
 	<p>想知道 SubFit 一路怎麼長大的，可以看<a href="/changelog">更新紀錄</a>。</p>
 

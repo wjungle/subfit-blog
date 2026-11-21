@@ -258,6 +258,30 @@ hr {
 	color: white;
 	transform: translateY(-2px);
 }
+/* CTA 下方的金源獎小字（覆寫上面 .cta-box a 的按鈕樣式） */
+.cta-box a.cta-award {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.4em;
+	margin-top: 1.2em;
+	padding: 0;
+	background: none;
+	box-shadow: none;
+	border-radius: 0;
+	color: rgb(var(--gray));
+	font-size: 0.82em;
+	font-weight: 500;
+}
+.cta-box a.cta-award:hover {
+	color: var(--accent-dark);
+	transform: none;
+}
+.cta-award img {
+	width: 20px;
+	height: auto;
+	flex-shrink: 0;
+}
 
 /* 小標籤 */
 .eyebrow {
