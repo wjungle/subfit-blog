@@ -736,6 +736,18 @@ const plans = [
 		.hero {
 			padding: 2.5em 0 3em;
 		}
+		/* 手機：金源獎徽章在最上面，左上兩條裝飾改成從徽章後方穿過（原本的 % 位置會壓在 eyebrow 與標題上）。
+		   數值對齊徽章的垂直中心：hero 上 padding 2.5em + 徽章高度一半 */
+		.bars span:nth-child(1) {
+			top: calc(2.5em + 24px);
+			left: -4%;
+			width: 60%;
+		}
+		.bars span:nth-child(2) {
+			top: calc(2.5em + 48px);
+			left: 4%;
+			width: 90px;
+		}
 		.hero-grid {
 			grid-template-columns: 1fr;
 			gap: 2em;

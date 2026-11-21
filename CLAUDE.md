@@ -79,7 +79,7 @@ draft: true               # 可選，設為 true 即隱藏（不產生頁面、�
   - 關於頁「關於 SubFit App」段落一句話。
   - `BlogPost.astro` CTA 按鈕下方灰色小字（`.cta-award`，樣式在 `global.css`），只有「金源獎」深色粗體。
   - 用詞一律照官方「年度十強」／「入選」，**不可寫成得獎、榮獲、肯定**。
-  - 獎座圖用 `src/assets/golden-code-award.webp`（從原圖裁透明邊、縮到 400px）。`public/logo-primary.webp` 是原圖，網站沒用到，不要 commit。
+  - 獎座圖用 `src/assets/golden-code-award.webp`（從原圖裁透明邊、縮到 400px）。原圖（2048px）已刪除，要重做就從主辦單位素材重新裁。
   - ⚠️ **試過、被否決的做法（2026-11-21）**：
     - 手機徽章加 ✕ 可關閉並記在 localStorage：使用者不要（關掉就永遠看不到）。
     - 手機徽章移到最上方置中＋彈出動畫，同時把 `.award` 從 `<a>` 改成外層 `<div>` 包 `<a>` 與關閉鈕：使用者電腦上的 pill **全變成方塊**（headless Chrome 截圖重現不出，原因未明），已整個還原（`6327e65`）。之後改徽章**不要動 `<a class="award">` 這層結構**，一次只改一項並讓使用者確認。
