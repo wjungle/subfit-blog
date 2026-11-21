@@ -718,6 +718,16 @@ const plans = [
 		.hero h1 {
 			font-size: 1.85em;
 		}
+		/* 手機：徽章移到商店按鈕下方，讓標題與 CTA 留在第一屏最上面 */
+		.hero-text {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		.award {
+			order: 1;
+			margin: 1.6em 0 0;
+		}
 		.plans {
 			grid-template-columns: 1fr;
 			max-width: 420px;
