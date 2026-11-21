@@ -107,8 +107,8 @@ const plans = [
 					<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
 						<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
 						<span class="award-text">
-							<span class="award-name">{AWARD.name}</span>
-							<strong>{AWARD.result}</strong>
+							<span class="award-meta">{AWARD.edition}・{AWARD.category}</span>
+							<span class="award-title"><strong>{AWARD.name}</strong> {AWARD.result}</span>
 						</span>
 					</a>
 					<div class="hero-visual">
@@ -375,14 +375,23 @@ const plans = [
 		flex-direction: column;
 		line-height: 1.35;
 	}
-	.award-name {
-		font-size: 0.78em;
+	/* 屆次與組別：小、淡 */
+	.award-meta {
+		font-size: 0.72em;
 		color: rgb(var(--gray));
 		letter-spacing: 0.04em;
 	}
-	.award-text strong {
-		font-size: 0.95em;
+	/* 「金源獎」最醒目（襯線粗體、放大），「年度十強」次之 */
+	.award-title {
+		font-size: 0.92em;
+		font-weight: 700;
 		letter-spacing: 0.04em;
+	}
+	.award-title strong {
+		font-family: var(--font-serif);
+		font-size: 1.3em;
+		font-weight: 900;
+		margin-right: 0.15em;
 	}
 	.hero h1 {
 		margin: 0.6em 0 0.5em;

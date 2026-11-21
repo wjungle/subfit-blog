@@ -74,5 +74,15 @@ draft: true               # 可選，設為 true 即隱藏（不產生頁面、�
 - 品牌色與共用樣式（`.btn`、`.cta-box`、`.eyebrow`）集中在 `src/styles/global.css` 的 CSS 變數，**不要在頁面寫死色碼**。品牌素材（logo、icon、og-image）取自主 app 的 `public/`。
 - 首頁 App 截圖：把圖片放進 `src/assets/screenshots/`（依檔名排序），首頁會自動顯示截圖區；資料夾為空時該區塊隱藏。
 - FAQ 內容在 `src/data/faqs.ts`，`/faq` 與首頁精選共用。
+- **金源獎入圍（2026 第一屆，生活健康教育組 年度十強）**：文字集中在 `src/consts.ts` 的 `AWARD`（屆次／名稱／組別／結果分開存），出現在三處：
+  - 首頁 Hero 徽章（`index.astro` 的 `.award`）：**桌面**用 grid 放右欄、主視覺上方（左欄只放文案，避免太雜）；**手機**排在商店按鈕下方。字級：「金源獎」襯線粗體放大最醒目，「屆次・組別」灰色小字弱化。
+  - 關於頁「關於 SubFit App」段落一句話。
+  - `BlogPost.astro` CTA 按鈕下方灰色小字（`.cta-award`，樣式在 `global.css`），只有「金源獎」深色粗體。
+  - 用詞一律照官方「年度十強」／「入選」，**不可寫成得獎、榮獲、肯定**。
+  - 獎座圖用 `src/assets/golden-code-award.webp`（從原圖裁透明邊、縮到 400px）。`public/logo-primary.webp` 是原圖，網站沒用到，不要 commit。
+  - ⚠️ **試過、被否決的做法（2026-11-21）**：
+    - 手機徽章加 ✕ 可關閉並記在 localStorage：使用者不要（關掉就永遠看不到）。
+    - 手機徽章移到最上方置中＋彈出動畫，同時把 `.award` 從 `<a>` 改成外層 `<div>` 包 `<a>` 與關閉鈕：使用者電腦上的 pill **全變成方塊**（headless Chrome 截圖重現不出，原因未明），已整個還原（`6327e65`）。之後改徽章**不要動 `<a class="award">` 這層結構**，一次只改一項並讓使用者確認。
+- **截圖驗證**：headless Chrome 視窗寬度小於 500px 時排版會失真（右側被切），模擬手機請用 500px 寬；有動畫的頁面加 `--virtual-time-budget=3000`。
 - Sitemap 自動產生於 `dist/sitemap-index.xml`，部署後建議提交到 Google Search Console。
 - `description` frontmatter 直接對應 `<meta name="description">` 和 OG tag，每篇文章務必填寫。
