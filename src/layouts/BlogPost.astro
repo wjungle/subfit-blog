@@ -127,7 +127,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 						</a>
 						<a class="cta-award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
 							<Image src={awardImage} alt="" width={20} height={23} />
-							{AWARD.name}　{AWARD.result}
+							<span>{AWARD.edition} <strong>{AWARD.name}</strong> {AWARD.category} {AWARD.result}</span>
 						</a>
 					</div>
 				</div>
