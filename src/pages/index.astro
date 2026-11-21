@@ -108,8 +108,9 @@ const plans = [
 					<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
 						<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
 						<span class="award-text">
-							<span class="award-meta">{AWARD.edition}・{AWARD.category}</span>
-							<span class="award-title"><strong>{AWARD.name}</strong> {AWARD.result}</span>
+							<!-- 「年度十強」是組別內的十強（各組各十強），一定要緊跟組別，不可接在「金源獎」後面 -->
+							<span class="award-title">{AWARD.edition} <strong>{AWARD.name}</strong></span>
+							<span class="award-meta">{AWARD.category} {AWARD.result}</span>
 						</span>
 					</a>
 					<div class="hero-visual">
@@ -376,23 +377,25 @@ const plans = [
 		flex-direction: column;
 		line-height: 1.35;
 	}
-	/* 屆次與組別：小、淡 */
-	.award-meta {
-		font-size: 0.72em;
+	/* 第一行：屆次（小）＋「金源獎」（襯線粗體放大，最醒目） */
+	.award-title {
+		font-size: 0.78em;
 		color: rgb(var(--gray));
 		letter-spacing: 0.04em;
 	}
-	/* 「金源獎」最醒目（襯線粗體、放大），「年度十強」次之 */
-	.award-title {
-		font-size: 0.92em;
-		font-weight: 700;
+	/* 第二行：「組別 年度十強」整行同一樣式，讀起來是一組 */
+	.award-meta {
+		font-size: 0.8em;
+		font-weight: 600;
+		color: rgb(var(--gray-dark));
 		letter-spacing: 0.04em;
 	}
 	.award-title strong {
 		font-family: var(--font-serif);
-		font-size: 1.3em;
+		font-size: 1.55em;
 		font-weight: 900;
-		margin-right: 0.15em;
+		color: var(--ink);
+		margin-left: 0.15em;
 	}
 	.hero h1 {
 		margin: 0.6em 0 0.5em;
