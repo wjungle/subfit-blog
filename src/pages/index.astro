@@ -12,6 +12,7 @@ import FlowExplainer from '../components/FlowExplainer.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 import { faqs } from '../data/faqs';
 import heroImage from '../assets/hero.jpg';
+import awardImage from '../assets/golden-code-award.webp';
 
 const APP_URL = 'https://subfit.app';
 
@@ -85,6 +86,19 @@ const plans = [
 				</div>
 				<div class="container hero-grid">
 					<div class="hero-text">
+						<!-- 金源獎入圍徽章：用詞照官方「年度十強」，不可寫成得獎 -->
+						<a
+							class="award"
+							href="https://goldencodeawards.com/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
+							<span class="award-text">
+								<span class="award-name">2026 第一屆 金源獎</span>
+								<strong>生活健康教育組　年度十強</strong>
+							</span>
+						</a>
 						<span class="eyebrow">沉浸式語言訓練 App</span>
 						<h1>
 							<span class="phrase">讓你遇到的每一句，</span><em class="phrase">都能變成你的練習</em>
@@ -322,6 +336,46 @@ const plans = [
 		grid-template-columns: 1fr 1.05fr;
 		align-items: center;
 		gap: 3em;
+	}
+	/* 金源獎徽章：放在 eyebrow 上方，一進首頁就看得到 */
+	.award {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.7em;
+		margin-bottom: 1.1em;
+		padding: 0.45em 1.1em 0.45em 0.6em;
+		border-radius: 999px;
+		background: var(--card);
+		border: 1px solid rgb(var(--gray-light));
+		box-shadow: var(--box-shadow);
+		color: var(--ink);
+		text-decoration: none;
+		transition: transform 0.15s ease;
+	}
+	.award:hover {
+		transform: translateY(-1px);
+	}
+	.award :global(img) {
+		width: 40px;
+		height: auto;
+		flex-shrink: 0;
+	}
+	.award-text {
+		display: flex;
+		flex-direction: column;
+		line-height: 1.35;
+	}
+	.award-name {
+		font-size: 0.78em;
+		color: rgb(var(--gray));
+		letter-spacing: 0.04em;
+	}
+	.award-text strong {
+		font-size: 0.95em;
+		letter-spacing: 0.04em;
+	}
+	.hero-text > .eyebrow {
+		display: table;
 	}
 	.hero h1 {
 		margin: 0.6em 0 0.5em;
