@@ -277,10 +277,6 @@ hr {
 	color: var(--accent-dark);
 	transform: none;
 }
-.cta-award strong {
-	color: rgb(var(--black));
-	font-weight: 700;
-}
 .cta-award img {
 	width: 20px;
 	height: auto;

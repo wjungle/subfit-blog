@@ -85,31 +85,6 @@ const plans = [
 					<span></span><span></span><span></span><span></span><span></span>
 				</div>
 				<div class="container hero-grid">
-					<!-- 金源獎入圍徽章（文字在 consts.ts 的 AWARD）。
-					     桌面：用 grid 放到右欄主視覺上方，不顯示關閉鈕；
-					     手機：單欄時排在最上面（HTML 順序），置中、彈出動畫、可按 ✕ 關掉（記在 localStorage） -->
-					<div class="award" id="award">
-						<a class="award-link" href={AWARD.url} target="_blank" rel="noopener noreferrer">
-							<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
-							<span class="award-text">
-								<span class="award-meta">{AWARD.edition}・{AWARD.category}</span>
-								<span class="award-title"><strong>{AWARD.name}</strong> {AWARD.result}</span>
-							</span>
-						</a>
-						<button type="button" class="award-close" aria-label="關閉金源獎提示">×</button>
-					</div>
-					<script is:inline>
-						// 同步執行：已關過的人在畫面出現前就隱藏，避免閃一下（只在手機版生效，見 CSS）
-						try {
-							if (localStorage.getItem('subfit_award_dismissed') === '1') {
-								document.getElementById('award').classList.add('dismissed');
-							}
-						} catch (e) {}
-						document.querySelector('#award .award-close').addEventListener('click', function () {
-							document.getElementById('award').classList.add('dismissed');
-							try { localStorage.setItem('subfit_award_dismissed', '1'); } catch (e) {}
-						});
-					</script>
 					<div class="hero-text">
 						<span class="eyebrow">沉浸式語言訓練 App</span>
 						<h1>
@@ -127,6 +102,15 @@ const plans = [
 						</div>
 						<StoreBadges />
 					</div>
+					<!-- 金源獎入圍徽章（文字在 consts.ts 的 AWARD）。
+					     桌面：右欄主視覺上方；手機：單欄時自然排在商店按鈕之後 -->
+					<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
+						<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
+						<span class="award-text">
+							<span class="award-name">{AWARD.name}</span>
+							<strong>{AWARD.result}</strong>
+						</span>
+					</a>
 					<div class="hero-visual">
 						<Image
 							src={heroImage}
@@ -368,24 +352,20 @@ const plans = [
 		z-index: 1;
 		display: inline-flex;
 		align-items: center;
+		gap: 0.7em;
+		padding: 0.45em 1.1em 0.45em 0.6em;
 		border-radius: 999px;
 		background: var(--card);
 		border: 1px solid rgb(var(--gray-light));
 		box-shadow: var(--box-shadow);
+		color: var(--ink);
+		text-decoration: none;
 		transition: transform 0.15s ease;
 	}
 	.award:hover {
 		transform: translateY(-1px);
 	}
-	.award-link {
-		display: flex;
-		align-items: center;
-		gap: 0.7em;
-		padding: 0.45em 1.3em 0.45em 0.6em;
-		color: var(--ink);
-		text-decoration: none;
-	}
-	.award-link :global(img) {
+	.award :global(img) {
 		width: 40px;
 		height: auto;
 		flex-shrink: 0;
@@ -393,34 +373,16 @@ const plans = [
 	.award-text {
 		display: flex;
 		flex-direction: column;
-		line-height: 1.3;
+		line-height: 1.35;
 	}
-	/* 屆次與組別：小、淡 */
-	.award-meta {
-		font-size: 0.72em;
+	.award-name {
+		font-size: 0.78em;
 		color: rgb(var(--gray));
 		letter-spacing: 0.04em;
 	}
-	/* 「金源獎」最醒目，「年度十強」次之 */
-	.award-title {
-		font-size: 0.92em;
-		font-weight: 700;
+	.award-text strong {
+		font-size: 0.95em;
 		letter-spacing: 0.04em;
-	}
-	.award-title strong {
-		font-family: var(--font-serif);
-		font-size: 1.3em;
-		font-weight: 900;
-		margin-right: 0.15em;
-	}
-	/* 關閉鈕只在手機出現 */
-	.award-close {
-		display: none;
-	}
-	@keyframes award-pop {
-		0% { opacity: 0; transform: translateY(-8px) scale(0.92); }
-		70% { opacity: 1; transform: translateY(0) scale(1.03); }
-		100% { opacity: 1; transform: translateY(0) scale(1); }
 	}
 	.hero h1 {
 		margin: 0.6em 0 0.5em;
@@ -768,7 +730,7 @@ const plans = [
 		.hero h1 {
 			font-size: 1.85em;
 		}
-		/* 手機：單欄，取消桌面的格位指定，依 HTML 順序排：徽章 → 文案 → 主視覺 */
+		/* 手機：單欄，取消桌面的格位指定，依 HTML 順序排：文案 → 徽章 → 主視覺 */
 		.hero-text,
 		.hero-visual,
 		.award {
@@ -776,34 +738,8 @@ const plans = [
 			grid-row: auto;
 		}
 		.award {
-			justify-self: center;
-			margin-bottom: -1em;
-			animation: award-pop 0.5s ease-out 0.3s both;
-		}
-		.award.dismissed {
-			display: none;
-		}
-		.award-link {
-			padding-right: 0.2em;
-		}
-		.award-close {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			width: 2em;
-			height: 2em;
-			margin-right: 0.4em;
-			padding: 0;
-			border: none;
-			border-radius: 999px;
-			background: none;
-			color: rgb(var(--gray));
-			font-size: 1.1em;
-			line-height: 1;
-			cursor: pointer;
-		}
-		.award-close:hover {
-			background: var(--accent-soft);
+			justify-self: start;
+			margin-top: -0.4em;
 		}
 		.plans {
 			grid-template-columns: 1fr;
