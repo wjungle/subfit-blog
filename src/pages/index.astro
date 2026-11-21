@@ -86,14 +86,6 @@ const plans = [
 				</div>
 				<div class="container hero-grid">
 					<div class="hero-text">
-						<!-- 金源獎入圍徽章（文字在 consts.ts 的 AWARD） -->
-						<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
-							<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
-							<span class="award-text">
-								<span class="award-name">{AWARD.name}</span>
-								<strong>{AWARD.result}</strong>
-							</span>
-						</a>
 						<span class="eyebrow">沉浸式語言訓練 App</span>
 						<h1>
 							<span class="phrase">讓你遇到的每一句，</span><em class="phrase">都能變成你的練習</em>
@@ -110,6 +102,15 @@ const plans = [
 						</div>
 						<StoreBadges />
 					</div>
+					<!-- 金源獎入圍徽章（文字在 consts.ts 的 AWARD）。
+					     桌面：右欄主視覺上方；手機：單欄時自然排在商店按鈕之後 -->
+					<a class="award" href={AWARD.url} target="_blank" rel="noopener noreferrer">
+						<Image src={awardImage} alt="金源獎獎座" width={40} height={46} loading="eager" />
+						<span class="award-text">
+							<span class="award-name">{AWARD.name}</span>
+							<strong>{AWARD.result}</strong>
+						</span>
+					</a>
 					<div class="hero-visual">
 						<Image
 							src={heroImage}
@@ -332,12 +333,26 @@ const plans = [
 		align-items: center;
 		gap: 3em;
 	}
-	/* 金源獎徽章：放在 eyebrow 上方，一進首頁就看得到 */
+	/* 金源獎徽章：桌面放在右欄、主視覺上方（和主視覺同一格，靠上置中），
+	   讓左欄只留文案，畫面左右平衡 */
+	.hero-text {
+		grid-column: 1;
+		grid-row: 1;
+	}
+	.hero-visual {
+		grid-column: 2;
+		grid-row: 1;
+	}
 	.award {
+		grid-column: 2;
+		grid-row: 1;
+		align-self: start;
+		justify-self: center;
+		position: relative;
+		z-index: 1;
 		display: inline-flex;
 		align-items: center;
 		gap: 0.7em;
-		margin-bottom: 1.1em;
 		padding: 0.45em 1.1em 0.45em 0.6em;
 		border-radius: 999px;
 		background: var(--card);
@@ -368,9 +383,6 @@ const plans = [
 	.award-text strong {
 		font-size: 0.95em;
 		letter-spacing: 0.04em;
-	}
-	.hero-text > .eyebrow {
-		display: table;
 	}
 	.hero h1 {
 		margin: 0.6em 0 0.5em;
@@ -718,15 +730,16 @@ const plans = [
 		.hero h1 {
 			font-size: 1.85em;
 		}
-		/* 手機：徽章移到商店按鈕下方，讓標題與 CTA 留在第一屏最上面 */
-		.hero-text {
-			display: flex;
-			flex-direction: column;
-			align-items: flex-start;
+		/* 手機：單欄，取消桌面的格位指定，依 HTML 順序排：文案 → 徽章 → 主視覺 */
+		.hero-text,
+		.hero-visual,
+		.award {
+			grid-column: auto;
+			grid-row: auto;
 		}
 		.award {
-			order: 1;
-			margin: 1.6em 0 0;
+			justify-self: start;
+			margin-top: -0.4em;
 		}
 		.plans {
 			grid-template-columns: 1fr;
